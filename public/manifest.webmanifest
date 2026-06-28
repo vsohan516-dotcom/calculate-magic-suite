@@ -1,0 +1,16 @@
+{
+  "name": "Lumen Calc",
+  "short_name": "Lumen",
+  "description": "Premium calculator suite with scientific, unit, currency and finance tools.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#1a1530",
+  "theme_color": "#1a1530",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
