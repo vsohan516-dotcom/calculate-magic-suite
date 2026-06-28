@@ -1,29 +1,31 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { CalculatorApp } from "@/components/calculator/CalculatorApp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "Lumen Calc — Premium calculator suite" },
+      {
+        name: "description",
+        content:
+          "A modern calculator with scientific, unit, currency, EMI, GST, BMI, age and tip tools — glass UI, voice input, and full history.",
+      },
+      { property: "og:title", content: "Lumen Calc — Premium calculator suite" },
+      {
+        property: "og:description",
+        content:
+          "Scientific, unit, currency, EMI, GST, BMI and more — in one beautiful, accessible calculator.",
+      },
     ],
   }),
-  component: Index,
+  component: HomePage,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function HomePage() {
   return (
-    <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
-    >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
-    </div>
+    <>
+      <h1 className="sr-only">Lumen Calc — premium calculator suite</h1>
+      <CalculatorApp />
+    </>
   );
 }
