@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Minimal SpeechRecognition types — vendor APIs aren't in lib.dom yet.
 interface SRResultItem { transcript: string }
@@ -52,7 +52,11 @@ export function useSpeech() {
   const [listening, setListening] = useState(false);
   const recogRef = useRef<SRInstance | null>(null);
 
-  const supported = typeof window !== "undefined" && !!getRecognitionCtor();
+  // Defer support detection until after mount so SSR & first client render match.
+  const [supported, setSupported] = useState(false);
+  useEffect(() => {
+    setSupported(!!getRecognitionCtor());
+  }, []);
 
   const start = useCallback(
     (onResult: (text: string) => void) => {
