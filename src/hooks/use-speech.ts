@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 // Minimal SpeechRecognition types — vendor APIs aren't in lib.dom yet.
 interface SRResultItem { transcript: string }
