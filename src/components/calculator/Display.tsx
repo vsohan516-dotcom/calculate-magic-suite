@@ -37,13 +37,14 @@ export function Display({
           {angleMode ? <span>{angleMode}</span> : null}
         </div>
         <div className="flex items-center gap-1">
-          {onMic && micSupported ? (
+          {onMic ? (
             <Button
               size="icon"
               variant="ghost"
               onClick={onMic}
+              disabled={!micSupported}
               aria-label={listening ? "Stop voice input" : "Start voice input"}
-              className={cn("size-8", listening && "text-primary animate-pulse")}
+              className={cn("size-8", listening && "text-primary animate-pulse", !micSupported && "opacity-40")}
             >
               {listening ? <MicOff className="size-4" /> : <Mic className="size-4" />}
             </Button>
