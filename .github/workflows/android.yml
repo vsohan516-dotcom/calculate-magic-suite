@@ -27,6 +27,9 @@ jobs:
       - name: Build web app
         run: npm run build
 
+      - name: Generate static index.html for Capacitor
+        run: node scripts/generate-capacitor-index.mjs
+
       - name: Add Android platform
         run: npx cap add android || true
 
