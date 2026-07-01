@@ -3,7 +3,7 @@ import type { CapacitorConfig } from "@capacitor/cli";
 const config: CapacitorConfig = {
   appId: "app.lovable.lumencalc",
   appName: "Lumen Calc",
-  webDir: "dist/client",
+  webDir: ".output/public",
   server: {
     androidScheme: "https",
   },
