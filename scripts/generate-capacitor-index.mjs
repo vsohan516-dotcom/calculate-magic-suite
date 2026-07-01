@@ -1,22 +1,29 @@
-// Generates a static index.html in dist/client so Capacitor (native Android/iOS)
-// can bundle this SSR app as a fully client-rendered SPA shell.
-import { readdirSync, writeFileSync, existsSync } from "node:fs";
+// Generates a static index.html in the client output dir so Capacitor
+// (native Android/iOS) can bundle this SSR app as a fully client-rendered SPA shell.
+import { readdirSync, writeFileSync, existsSync, mkdirSync, cpSync } from "node:fs";
 import { join } from "node:path";
 
-const clientDir = "dist/client";
-const assetsDir = join(clientDir, "assets");
+// Try known client output locations (varies by nitro preset).
+const candidates = ["dist/client", ".output/public"];
+let clientDir = candidates.find((d) => existsSync(join(d, "assets")));
 
-if (!existsSync(assetsDir)) {
-  console.error(`[capacitor] ${assetsDir} does not exist — run 'npm run build' first.`);
+if (!clientDir) {
+  console.error(
+    `[capacitor] No client build found. Looked in: ${candidates.join(", ")}. Run 'npm run build' first.`,
+  );
   process.exit(1);
 }
 
+console.log(`[capacitor] Using client dir: ${clientDir}`);
+
+const assetsDir = join(clientDir, "assets");
 const files = readdirSync(assetsDir);
 const entryJs = files.find((f) => /^index-.*\.js$/.test(f));
 const styleCss = files.find((f) => /\.css$/.test(f));
 
 if (!entryJs) {
-  console.error("[capacitor] Could not find client entry JS in dist/client/assets");
+  console.error("[capacitor] Could not find client entry JS in " + assetsDir);
+  console.error("[capacitor] Files present: " + files.join(", "));
   process.exit(1);
 }
 
@@ -39,3 +46,11 @@ const html = `<!doctype html>
 
 writeFileSync(join(clientDir, "index.html"), html);
 console.log(`[capacitor] Wrote ${clientDir}/index.html (entry: ${entryJs})`);
+
+// Capacitor's config expects webDir at dist/client. If the build produced
+// .output/public instead, mirror it so `npx cap sync` finds the assets.
+if (clientDir !== "dist/client") {
+  mkdirSync("dist", { recursive: true });
+  cpSync(clientDir, "dist/client", { recursive: true });
+  console.log(`[capacitor] Mirrored ${clientDir} -> dist/client for Capacitor sync`);
+}
