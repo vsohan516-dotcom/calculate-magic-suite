@@ -14,8 +14,8 @@ git clone https://github.com/vsohan516-dotcom/<your-repo>.git
 cd <your-repo>
 bun install        # or: npm install
 
-# 2. Build the web app (outputs to dist/client)
-bun run build      # or: npm run build
+# 2. Build Android web assets (outputs to dist/client)
+bun run build:capacitor      # or: npm run build:capacitor
 
 # 3. Generate the native Android project
 npx cap add android
@@ -27,7 +27,7 @@ npx cap sync android
 ## Every time you change web code
 
 ```bash
-bun run build
+bun run build:capacitor
 npx cap sync android
 ```
 
@@ -54,8 +54,8 @@ npx cap run android
 
 - App ID: `app.lovable.lumencalc` (change in `capacitor.config.ts` before the
   first `cap add android` if you want a different package name).
-- `webDir` points at `dist/client` because TanStack Start's Vite build emits
-  the client bundle there.
+- `webDir` points at `dist/client`. Android uses a dedicated static Vite build
+  (`build:capacitor`) so the app opens correctly inside the native WebView.
 - The app runs fully offline once installed — all calculator logic, history,
   converters, and tools work without a network. Live currency rates still
   require internet.
