@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import type { HistoryEntry } from "@/hooks/use-history";
 import { toast } from "sonner";
+import { isNative, saveOrShareFile } from "@/lib/native";
 
 interface HistoryPanelProps {
   entries: HistoryEntry[];
@@ -23,18 +24,6 @@ function formatTime(ts: number): string {
   });
 }
 
-function downloadBlob(content: string, mime: string, filename: string) {
-  const blob = new Blob([content], { type: mime });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  a.remove();
-  URL.revokeObjectURL(url);
-}
-
 function toCSV(entries: HistoryEntry[]): string {
   const header = "Timestamp,Category,Expression,Result\n";
   const rows = entries
@@ -51,13 +40,7 @@ function toCSV(entries: HistoryEntry[]): string {
   return header + rows;
 }
 
-function exportPDF(entries: HistoryEntry[]) {
-  // Use a print-friendly window to produce a clean PDF via the browser's print dialog.
-  const win = window.open("", "_blank", "noopener,noreferrer,width=720,height=900");
-  if (!win) {
-    toast.error("Please allow pop-ups to export PDF");
-    return;
-  }
+function buildHistoryHTML(entries: HistoryEntry[]): string {
   const rows = entries
     .map(
       (e) => `
@@ -69,7 +52,7 @@ function exportPDF(entries: HistoryEntry[]) {
       </tr>`,
     )
     .join("");
-  win.document.write(`<!doctype html><html><head><title>Calculation History</title>
+  return `<!doctype html><html><head><meta charset="utf-8"><title>Calculation History</title>
     <style>
       *{box-sizing:border-box}
       body{font-family:Inter,system-ui,sans-serif;padding:32px;color:#111}
@@ -85,9 +68,46 @@ function exportPDF(entries: HistoryEntry[]) {
     <div class="meta">Exported ${new Date().toLocaleString()} · ${entries.length} entries</div>
     <table><thead><tr><th>Time</th><th>Mode</th><th>Expression</th><th>Result</th></tr></thead>
     <tbody>${rows}</tbody></table>
-    <script>window.onload=()=>setTimeout(()=>window.print(),300)</script>
-  </body></html>`);
+  </body></html>`;
+}
+
+async function exportPDF(entries: HistoryEntry[]) {
+  const html = buildHistoryHTML(entries);
+  // On native Android/iOS we can't open a print pop-up — save the HTML and let
+  // the user open it in a browser to print / Save as PDF.
+  if (isNative()) {
+    try {
+      await saveOrShareFile(`history-${Date.now()}.html`, html, "text/html");
+      toast.success("History exported — open in a browser to save as PDF");
+    } catch (err) {
+      console.error(err);
+      toast.error("Export failed");
+    }
+    return;
+  }
+  const win = window.open("", "_blank", "noopener,noreferrer,width=720,height=900");
+  if (!win) {
+    // Pop-up blocked — fall back to a downloadable HTML file.
+    await saveOrShareFile(`history-${Date.now()}.html`, html, "text/html");
+    toast.success("Downloaded HTML — open it and print to PDF");
+    return;
+  }
+  win.document.write(
+    html.replace(
+      "</body>",
+      `<script>window.onload=()=>setTimeout(()=>window.print(),300)</script></body>`,
+    ),
+  );
   win.document.close();
+}
+
+async function exportCSV(entries: HistoryEntry[]) {
+  try {
+    await saveOrShareFile(`history-${Date.now()}.csv`, toCSV(entries), "text/csv");
+  } catch (err) {
+    console.error(err);
+    toast.error("Export failed");
+  }
 }
 
 export function HistoryPanel({ entries, onClear, onRemove, onReuse }: HistoryPanelProps) {
