@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from "react";
+import { isNative } from "@/lib/native";
 
 // Minimal SpeechRecognition types — vendor APIs aren't in lib.dom yet.
 interface SRResultItem { transcript: string }
@@ -40,7 +41,6 @@ const WORD_MAP: Record<string, string> = {
 export function spokenToExpression(input: string): string {
   let s = ` ${input.toLowerCase().trim()} `;
   s = s.replace(/\bequals?\b/g, "");
-  // Multi-word replacements first.
   for (const phrase of Object.keys(WORD_MAP).sort((a, b) => b.length - a.length)) {
     const re = new RegExp(`\\b${phrase.replace(/ /g, "\\s+")}\\b`, "g");
     s = s.replace(re, ` ${WORD_MAP[phrase]} `);
@@ -50,18 +50,58 @@ export function spokenToExpression(input: string): string {
 
 export function useSpeech() {
   const [listening, setListening] = useState(false);
-  const recogRef = useRef<SRInstance | null>(null);
-
-  // Defer support detection until after mount so SSR & first client render match.
   const [supported, setSupported] = useState(false);
+  const recogRef = useRef<SRInstance | null>(null);
+  const nativeActiveRef = useRef(false);
+
   useEffect(() => {
+    if (isNative()) {
+      setSupported(true);
+      return;
+    }
     setSupported(!!getRecognitionCtor());
   }, []);
 
-  const start = useCallback(
-    (onResult: (text: string) => void) => {
-      const Ctor = getRecognitionCtor();
-      if (!Ctor) return;
+  const start = useCallback((onResult: (text: string) => void) => {
+    if (isNative()) {
+      (async () => {
+        try {
+          const { SpeechRecognition } = await import("@capacitor-community/speech-recognition");
+          const avail = await SpeechRecognition.available();
+          if (!avail.available) {
+            setSupported(false);
+            return;
+          }
+          const perm = await SpeechRecognition.checkPermissions();
+          if (perm.speechRecognition !== "granted") {
+            const req = await SpeechRecognition.requestPermissions();
+            if (req.speechRecognition !== "granted") return;
+          }
+          nativeActiveRef.current = true;
+          setListening(true);
+          const res = await SpeechRecognition.start({
+            language: "en-US",
+            maxResults: 1,
+            prompt: "Speak your calculation",
+            partialResults: false,
+            popup: false,
+          });
+          const matches = (res as { matches?: string[] })?.matches;
+          if (matches && matches[0]) onResult(spokenToExpression(matches[0]));
+        } catch (err) {
+          console.error("Native speech recognition failed", err);
+        } finally {
+          nativeActiveRef.current = false;
+          setListening(false);
+        }
+      })();
+      return;
+    }
+
+    const Ctor = getRecognitionCtor();
+    if (!Ctor) return;
+
+    const begin = () => {
       const recog = new Ctor();
       recog.lang = "en-US";
       recog.continuous = false;
@@ -79,16 +119,51 @@ export function useSpeech() {
       } catch {
         setListening(false);
       }
-    },
-    [],
-  );
+    };
+
+    // Ensure mic permission first — required in Android WebView / secure contexts.
+    if (navigator.mediaDevices?.getUserMedia) {
+      navigator.mediaDevices
+        .getUserMedia({ audio: true })
+        .then((stream) => {
+          stream.getTracks().forEach((t) => t.stop());
+          begin();
+        })
+        .catch(() => {
+          setListening(false);
+        });
+    } else {
+      begin();
+    }
+  }, []);
 
   const stop = useCallback(() => {
+    if (isNative() && nativeActiveRef.current) {
+      import("@capacitor-community/speech-recognition").then(({ SpeechRecognition }) =>
+        SpeechRecognition.stop().catch(() => {}),
+      );
+      nativeActiveRef.current = false;
+      setListening(false);
+      return;
+    }
     recogRef.current?.stop();
     setListening(false);
   }, []);
 
   const speak = useCallback((text: string) => {
+    if (isNative()) {
+      import("@capacitor-community/text-to-speech").then(({ TextToSpeech }) => {
+        TextToSpeech.speak({
+          text,
+          lang: "en-US",
+          rate: 1.0,
+          pitch: 1.0,
+          volume: 1.0,
+          category: "ambient",
+        }).catch((err) => console.error("Native TTS failed", err));
+      });
+      return;
+    }
     if (typeof window === "undefined" || !window.speechSynthesis) return;
     const u = new SpeechSynthesisUtterance(text);
     u.rate = 1;
