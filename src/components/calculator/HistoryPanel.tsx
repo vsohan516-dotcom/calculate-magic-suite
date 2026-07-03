@@ -142,9 +142,7 @@ export function HistoryPanel({ entries, onClear, onRemove, onReuse }: HistoryPan
           <Button
             variant="ghost"
             size="sm"
-            onClick={() =>
-              downloadBlob(toCSV(entries), "text/csv", `history-${Date.now()}.csv`)
-            }
+            onClick={() => exportCSV(entries)}
             disabled={!entries.length}
             aria-label="Export history as CSV"
           >
