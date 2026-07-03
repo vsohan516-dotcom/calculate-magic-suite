@@ -48,6 +48,16 @@ function cleanSpeechText(input: string): string {
     .replace(/[=]/g, " ");
 }
 
+function escapeRegExp(input: string): string {
+  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function phraseRegExp(phrase: string): RegExp {
+  const escaped = escapeRegExp(phrase).replace(/\s+/g, "\\s+");
+  const asciiWord = /^[a-z0-9 ]+$/i.test(phrase);
+  return new RegExp(asciiWord ? `\\b${escaped}\\b` : escaped, "g");
+}
+
 // Translate spoken phrases like "five plus three" / "पांच प्लस तीन" into a calculator expression.
 const WORD_MAP: Record<string, string> = {
   plus: "+", add: "+", and: "+",
@@ -84,9 +94,11 @@ export function spokenToExpression(input: string): string {
   let s = ` ${cleanSpeechText(input).toLowerCase().trim()} `;
   s = s.replace(/\b(equals?|equal to|is)\b/g, "");
   for (const phrase of Object.keys(WORD_MAP).sort((a, b) => b.length - a.length)) {
-    const re = new RegExp(`\\b${phrase.replace(/ /g, "\\s+")}\\b`, "g");
+    const re = phraseRegExp(phrase);
     s = s.replace(re, ` ${WORD_MAP[phrase]} `);
   }
+  // Fix common spoken number compounds: "twenty five" / "बीस पांच" -> 25.
+  s = s.replace(/\b([2-9]0)\s+([1-9])\b/g, (_, ten: string, one: string) => String(Number(ten) + Number(one)));
   return s
     .replace(/\s*([+\-*/%^().])\s*/g, "$1")
     .replace(/[^0-9+\-*/%^().πe]/g, "")
