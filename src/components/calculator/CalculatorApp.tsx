@@ -9,6 +9,7 @@ import { HistoryPanel } from "@/components/calculator/HistoryPanel";
 import { StatsChart } from "@/components/calculator/StatsChart";
 import { UnitConverter } from "@/components/calculator/UnitConverter";
 import { CurrencyConverter } from "@/components/calculator/CurrencyConverter";
+import { GitSyncStatus } from "@/components/calculator/GitSyncStatus";
 import {
   AgeCalc, BmiCalc, DiscountCalc, EmiCalc, GstCalc, PercentageCalc, TipCalc,
 } from "@/components/calculator/Tools";
@@ -61,8 +62,10 @@ export function CalculatorApp() {
               </SheetTrigger>
               <SheetContent side="right" className="w-full p-3 sm:max-w-md">
                 <div className="mt-6 flex h-[calc(100dvh-2rem)] flex-col gap-3">
+                  <GitSyncStatus />
                   <StatsChart entries={history.entries} />
                   <div className="min-h-0 flex-1">
+
                     <HistoryPanel
                       entries={history.entries}
                       onClear={history.clear}
@@ -130,6 +133,7 @@ export function CalculatorApp() {
 
         {/* Sidebar — visible on lg+, in sheet on smaller screens */}
         <aside className="hidden flex-col gap-4 lg:flex lg:sticky lg:top-24 lg:h-[calc(100dvh-7rem)]">
+          <GitSyncStatus />
           <StatsChart entries={history.entries} />
           <div className="min-h-0 flex-1">
             <HistoryPanel
