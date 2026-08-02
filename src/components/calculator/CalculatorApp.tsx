@@ -9,6 +9,7 @@ import { HistoryPanel } from "@/components/calculator/HistoryPanel";
 import { StatsChart } from "@/components/calculator/StatsChart";
 import { UnitConverter } from "@/components/calculator/UnitConverter";
 import { CurrencyConverter } from "@/components/calculator/CurrencyConverter";
+import { GitSyncStatus } from "@/components/calculator/GitSyncStatus";
 import {
   AgeCalc, BmiCalc, DiscountCalc, EmiCalc, GstCalc, PercentageCalc, TipCalc,
 } from "@/components/calculator/Tools";
