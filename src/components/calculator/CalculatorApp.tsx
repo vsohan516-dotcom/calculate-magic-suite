@@ -62,8 +62,10 @@ export function CalculatorApp() {
               </SheetTrigger>
               <SheetContent side="right" className="w-full p-3 sm:max-w-md">
                 <div className="mt-6 flex h-[calc(100dvh-2rem)] flex-col gap-3">
+                  <GitSyncStatus />
                   <StatsChart entries={history.entries} />
                   <div className="min-h-0 flex-1">
+
                     <HistoryPanel
                       entries={history.entries}
                       onClear={history.clear}
