@@ -133,6 +133,7 @@ export function CalculatorApp() {
 
         {/* Sidebar — visible on lg+, in sheet on smaller screens */}
         <aside className="hidden flex-col gap-4 lg:flex lg:sticky lg:top-24 lg:h-[calc(100dvh-7rem)]">
+          <GitSyncStatus />
           <StatsChart entries={history.entries} />
           <div className="min-h-0 flex-1">
             <HistoryPanel
