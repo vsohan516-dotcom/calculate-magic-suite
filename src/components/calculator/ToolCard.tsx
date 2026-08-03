@@ -1,4 +1,45 @@
 import type { ReactNode } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+
+export function Field({
+  id,
+  label,
+  value,
+  onChange,
+  type = "number",
+  suffix,
+  placeholder,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  type?: string;
+  suffix?: string;
+  placeholder?: string;
+}) {
+  return (
+    <div className="space-y-1.5">
+      <Label htmlFor={id}>{label}</Label>
+      <div className="relative">
+        <Input
+          id={id}
+          type={type}
+          inputMode={type === "number" ? "decimal" : undefined}
+          value={value}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+        />
+        {suffix ? (
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
+            {suffix}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
 
 /**
  * Shared shell for the additional tool cards. Matches the existing glass-panel
