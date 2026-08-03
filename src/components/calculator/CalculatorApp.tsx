@@ -13,13 +13,24 @@ import { GitSyncStatus } from "@/components/calculator/GitSyncStatus";
 import {
   AgeCalc, BmiCalc, DiscountCalc, EmiCalc, GstCalc, PercentageCalc, TipCalc,
 } from "@/components/calculator/Tools";
+import {
+  AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc, SimpleInterestCalc,
+  SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
+} from "@/components/calculator/FinanceTools";
+import { BmrCalc, BodyFatCalc, WaterIntakeCalc } from "@/components/calculator/HealthTools";
+import { CountdownTimer, DateDiffCalc, Stopwatch, TimeCalc } from "@/components/calculator/TimeTools";
+import {
+  AsciiConverter, BaseConverter, DataSizeConverter, RomanConverter,
+} from "@/components/calculator/ConverterTools";
 import { useHistory } from "@/hooks/use-history";
 import { useTheme } from "@/hooks/use-theme";
 
 export function CalculatorApp() {
   const history = useHistory();
   const { theme, toggle } = useTheme();
-  const [mode, setMode] = useState<"standard" | "scientific" | "tools" | "convert">("standard");
+  const [mode, setMode] = useState<
+    "standard" | "scientific" | "tools" | "convert" | "finance" | "health" | "time"
+  >("standard");
 
   const commitMisc = useCallback(
     (expression: string, result: string, category = "Tools") => {
@@ -90,14 +101,14 @@ export function CalculatorApp() {
       <main className="mx-auto grid max-w-6xl gap-6 px-4 pb-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <section className="space-y-4">
           <Tabs value={mode} onValueChange={(v) => setMode(v as typeof mode)}>
-            <TabsList className="glass-panel grid h-auto w-full grid-cols-4 gap-1 rounded-2xl p-1.5">
+            <TabsList className="glass-panel grid h-auto w-full grid-cols-4 gap-1 rounded-2xl p-1.5 sm:grid-cols-7">
               <TabsTrigger value="standard" className="gap-1.5 rounded-xl py-2">
                 <CalcIcon className="size-4" />
                 <span className="hidden sm:inline">Standard</span>
               </TabsTrigger>
               <TabsTrigger value="scientific" className="gap-1.5 rounded-xl py-2">
                 <FlaskConical className="size-4" />
-                <span className="hidden sm:inline">Scientific</span>
+                <span className="hidden sm:inline">Science</span>
               </TabsTrigger>
               <TabsTrigger value="tools" className="gap-1.5 rounded-xl py-2">
                 <Sliders className="size-4" />
@@ -106,6 +117,18 @@ export function CalculatorApp() {
               <TabsTrigger value="convert" className="gap-1.5 rounded-xl py-2">
                 <span className="text-sm">⇄</span>
                 <span className="hidden sm:inline">Convert</span>
+              </TabsTrigger>
+              <TabsTrigger value="finance" className="gap-1.5 rounded-xl py-2">
+                <span className="text-sm">₹</span>
+                <span className="hidden sm:inline">Finance</span>
+              </TabsTrigger>
+              <TabsTrigger value="health" className="gap-1.5 rounded-xl py-2">
+                <span className="text-sm">♥</span>
+                <span className="hidden sm:inline">Health</span>
+              </TabsTrigger>
+              <TabsTrigger value="time" className="gap-1.5 rounded-xl py-2">
+                <span className="text-sm">⏱</span>
+                <span className="hidden sm:inline">Time</span>
               </TabsTrigger>
             </TabsList>
 
@@ -127,9 +150,37 @@ export function CalculatorApp() {
             <TabsContent value="convert" className="animate-pop mt-4 space-y-4">
               <UnitConverter onCommit={(e, r) => commitMisc(e, r, "Unit")} />
               <CurrencyConverter onCommit={(e, r) => commitMisc(e, r, "Currency")} />
+              <BaseConverter onCommit={commitMisc} />
+              <RomanConverter onCommit={commitMisc} />
+              <AsciiConverter />
+              <DataSizeConverter onCommit={commitMisc} />
+            </TabsContent>
+            <TabsContent value="finance" className="animate-pop mt-4 space-y-4">
+              <SipCalc onCommit={commitMisc} />
+              <LoanCalc onCommit={commitMisc} />
+              <SimpleInterestCalc onCommit={commitMisc} />
+              <CompoundInterestCalc onCommit={commitMisc} />
+              <TaxCalc onCommit={commitMisc} />
+              <ProfitLossCalc onCommit={commitMisc} />
+              <SplitBillCalc onCommit={commitMisc} />
+              <FuelCostCalc onCommit={commitMisc} />
+              <UnitPriceCalc onCommit={commitMisc} />
+              <AverageCalc onCommit={commitMisc} />
+            </TabsContent>
+            <TabsContent value="health" className="animate-pop mt-4 space-y-4">
+              <BmrCalc onCommit={commitMisc} />
+              <BodyFatCalc onCommit={commitMisc} />
+              <WaterIntakeCalc onCommit={commitMisc} />
+            </TabsContent>
+            <TabsContent value="time" className="animate-pop mt-4 space-y-4">
+              <TimeCalc onCommit={commitMisc} />
+              <DateDiffCalc onCommit={commitMisc} />
+              <Stopwatch />
+              <CountdownTimer />
             </TabsContent>
           </Tabs>
         </section>
+
 
         {/* Sidebar — visible on lg+, in sheet on smaller screens */}
         <aside className="hidden flex-col gap-4 lg:flex lg:sticky lg:top-24 lg:h-[calc(100dvh-7rem)]">
