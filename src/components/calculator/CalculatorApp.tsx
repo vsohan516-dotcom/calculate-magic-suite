@@ -28,7 +28,9 @@ import { useTheme } from "@/hooks/use-theme";
 export function CalculatorApp() {
   const history = useHistory();
   const { theme, toggle } = useTheme();
-  const [mode, setMode] = useState<"standard" | "scientific" | "tools" | "convert">("standard");
+  const [mode, setMode] = useState<
+    "standard" | "scientific" | "tools" | "convert" | "finance" | "health" | "time"
+  >("standard");
 
   const commitMisc = useCallback(
     (expression: string, result: string, category = "Tools") => {
