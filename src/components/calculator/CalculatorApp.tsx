@@ -101,46 +101,42 @@ export function CalculatorApp() {
       <main className="mx-auto grid max-w-6xl gap-6 px-4 pb-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <section className="space-y-4">
           <Tabs value={mode} onValueChange={(v) => setMode(v as typeof mode)}>
-            <TabsList className="glass-panel grid h-auto w-full grid-cols-4 gap-1 rounded-2xl p-1.5">
-              <TabsTrigger value="standard" className="gap-1.5 rounded-xl py-2">
-                <CalcIcon className="size-4" />
-                <span className="hidden sm:inline">Standard</span>
-              </TabsTrigger>
-              <TabsTrigger value="scientific" className="gap-1.5 rounded-xl py-2">
-                <FlaskConical className="size-4" />
-                <span className="hidden sm:inline">Scientific</span>
-              </TabsTrigger>
-              <TabsTrigger value="tools" className="gap-1.5 rounded-xl py-2">
-                <Sliders className="size-4" />
-                <span className="hidden sm:inline">Tools</span>
-              </TabsTrigger>
-              <TabsTrigger value="convert" className="gap-1.5 rounded-xl py-2">
-                <span className="text-sm">⇄</span>
-                <span className="hidden sm:inline">Convert</span>
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="standard" className="animate-pop mt-4">
-              <Calculator onCommit={commitCalc} />
-            </TabsContent>
-            <TabsContent value="scientific" className="animate-pop mt-4">
-              <Calculator scientific onCommit={commitCalc} />
-            </TabsContent>
-            <TabsContent value="tools" className="animate-pop mt-4 space-y-4">
-              <PercentageCalc onCommit={commitMisc} />
-              <GstCalc onCommit={commitMisc} />
-              <DiscountCalc onCommit={commitMisc} />
-              <TipCalc onCommit={commitMisc} />
-              <EmiCalc onCommit={commitMisc} />
-              <BmiCalc onCommit={commitMisc} />
-              <AgeCalc onCommit={commitMisc} />
-            </TabsContent>
+            <TabsList className="glass-panel grid h-auto w-full grid-cols-4 gap-1 rounded-2xl p-1.5 sm:grid-cols-7">
+...
             <TabsContent value="convert" className="animate-pop mt-4 space-y-4">
               <UnitConverter onCommit={(e, r) => commitMisc(e, r, "Unit")} />
               <CurrencyConverter onCommit={(e, r) => commitMisc(e, r, "Currency")} />
+              <BaseConverter onCommit={commitMisc} />
+              <RomanConverter onCommit={commitMisc} />
+              <AsciiConverter />
+              <DataSizeConverter onCommit={commitMisc} />
+            </TabsContent>
+            <TabsContent value="finance" className="animate-pop mt-4 space-y-4">
+              <SipCalc onCommit={commitMisc} />
+              <LoanCalc onCommit={commitMisc} />
+              <SimpleInterestCalc onCommit={commitMisc} />
+              <CompoundInterestCalc onCommit={commitMisc} />
+              <TaxCalc onCommit={commitMisc} />
+              <ProfitLossCalc onCommit={commitMisc} />
+              <SplitBillCalc onCommit={commitMisc} />
+              <FuelCostCalc onCommit={commitMisc} />
+              <UnitPriceCalc onCommit={commitMisc} />
+              <AverageCalc onCommit={commitMisc} />
+            </TabsContent>
+            <TabsContent value="health" className="animate-pop mt-4 space-y-4">
+              <BmrCalc onCommit={commitMisc} />
+              <BodyFatCalc onCommit={commitMisc} />
+              <WaterIntakeCalc onCommit={commitMisc} />
+            </TabsContent>
+            <TabsContent value="time" className="animate-pop mt-4 space-y-4">
+              <TimeCalc onCommit={commitMisc} />
+              <DateDiffCalc onCommit={commitMisc} />
+              <Stopwatch />
+              <CountdownTimer />
             </TabsContent>
           </Tabs>
         </section>
+
 
         {/* Sidebar — visible on lg+, in sheet on smaller screens */}
         <aside className="hidden flex-col gap-4 lg:flex lg:sticky lg:top-24 lg:h-[calc(100dvh-7rem)]">
