@@ -13,6 +13,15 @@ import { GitSyncStatus } from "@/components/calculator/GitSyncStatus";
 import {
   AgeCalc, BmiCalc, DiscountCalc, EmiCalc, GstCalc, PercentageCalc, TipCalc,
 } from "@/components/calculator/Tools";
+import {
+  AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc, SimpleInterestCalc,
+  SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
+} from "@/components/calculator/FinanceTools";
+import { BmrCalc, BodyFatCalc, WaterIntakeCalc } from "@/components/calculator/HealthTools";
+import { CountdownTimer, DateDiffCalc, Stopwatch, TimeCalc } from "@/components/calculator/TimeTools";
+import {
+  AsciiConverter, BaseConverter, DataSizeConverter, RomanConverter,
+} from "@/components/calculator/ConverterTools";
 import { useHistory } from "@/hooks/use-history";
 import { useTheme } from "@/hooks/use-theme";
 
