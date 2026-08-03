@@ -102,7 +102,51 @@ export function CalculatorApp() {
         <section className="space-y-4">
           <Tabs value={mode} onValueChange={(v) => setMode(v as typeof mode)}>
             <TabsList className="glass-panel grid h-auto w-full grid-cols-4 gap-1 rounded-2xl p-1.5 sm:grid-cols-7">
-...
+              <TabsTrigger value="standard" className="gap-1.5 rounded-xl py-2">
+                <CalcIcon className="size-4" />
+                <span className="hidden sm:inline">Standard</span>
+              </TabsTrigger>
+              <TabsTrigger value="scientific" className="gap-1.5 rounded-xl py-2">
+                <FlaskConical className="size-4" />
+                <span className="hidden sm:inline">Science</span>
+              </TabsTrigger>
+              <TabsTrigger value="tools" className="gap-1.5 rounded-xl py-2">
+                <Sliders className="size-4" />
+                <span className="hidden sm:inline">Tools</span>
+              </TabsTrigger>
+              <TabsTrigger value="convert" className="gap-1.5 rounded-xl py-2">
+                <span className="text-sm">⇄</span>
+                <span className="hidden sm:inline">Convert</span>
+              </TabsTrigger>
+              <TabsTrigger value="finance" className="gap-1.5 rounded-xl py-2">
+                <span className="text-sm">₹</span>
+                <span className="hidden sm:inline">Finance</span>
+              </TabsTrigger>
+              <TabsTrigger value="health" className="gap-1.5 rounded-xl py-2">
+                <span className="text-sm">♥</span>
+                <span className="hidden sm:inline">Health</span>
+              </TabsTrigger>
+              <TabsTrigger value="time" className="gap-1.5 rounded-xl py-2">
+                <span className="text-sm">⏱</span>
+                <span className="hidden sm:inline">Time</span>
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="standard" className="animate-pop mt-4">
+              <Calculator onCommit={commitCalc} />
+            </TabsContent>
+            <TabsContent value="scientific" className="animate-pop mt-4">
+              <Calculator scientific onCommit={commitCalc} />
+            </TabsContent>
+            <TabsContent value="tools" className="animate-pop mt-4 space-y-4">
+              <PercentageCalc onCommit={commitMisc} />
+              <GstCalc onCommit={commitMisc} />
+              <DiscountCalc onCommit={commitMisc} />
+              <TipCalc onCommit={commitMisc} />
+              <EmiCalc onCommit={commitMisc} />
+              <BmiCalc onCommit={commitMisc} />
+              <AgeCalc onCommit={commitMisc} />
+            </TabsContent>
             <TabsContent value="convert" className="animate-pop mt-4 space-y-4">
               <UnitConverter onCommit={(e, r) => commitMisc(e, r, "Unit")} />
               <CurrencyConverter onCommit={(e, r) => commitMisc(e, r, "Currency")} />
