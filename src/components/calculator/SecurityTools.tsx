@@ -19,11 +19,9 @@ export function PasswordGenerator() {
   const [password, setPassword] = useState("");
 
   const make = () => {
-    try {
-      setPassword(generatePassword({ length, upper, lower, digits, symbols, excludeAmbiguous }));
-    } catch {
-      toast.error("Pick at least one character set");
-    }
+    const pw = generatePassword({ length, upper, lower, digits, symbols, excludeAmbiguous });
+    if (!pw) return toast.error("Pick at least one character set");
+    setPassword(pw);
   };
 
   const rows: Array<[string, boolean, (v: boolean) => void]> = [
