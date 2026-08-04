@@ -32,13 +32,18 @@ export function QrGenerator() {
 
   const download = async () => {
     if (!dataUrl) return;
-    const { saveOrShareFile } = await import("@/lib/native");
     const base64 = dataUrl.split(",")[1] ?? "";
-    await saveOrShareFile({
-      fileName: "qr-code.png",
-      mimeType: "image/png",
-      base64,
-    });
+    const { isNative, saveOrShareFile } = await import("@/lib/native");
+    if (isNative()) {
+      await saveOrShareFile("qr-code.png", base64, "image/png");
+      return;
+    }
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = "qr-code.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
   };
 
   return (
