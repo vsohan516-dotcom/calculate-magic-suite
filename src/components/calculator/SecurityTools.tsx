@@ -13,13 +13,14 @@ export function PasswordGenerator() {
   const [length, setLength] = useState(16);
   const [upper, setUpper] = useState(true);
   const [lower, setLower] = useState(true);
-  const [numbers, setNumbers] = useState(true);
+  const [digits, setDigits] = useState(true);
+  const [excludeAmbiguous, setExcludeAmbiguous] = useState(false);
   const [symbols, setSymbols] = useState(true);
   const [password, setPassword] = useState("");
 
   const make = () => {
     try {
-      setPassword(generatePassword({ length, upper, lower, numbers, symbols }));
+      setPassword(generatePassword({ length, upper, lower, digits, symbols, excludeAmbiguous }));
     } catch {
       toast.error("Pick at least one character set");
     }
@@ -28,7 +29,8 @@ export function PasswordGenerator() {
   const rows: Array<[string, boolean, (v: boolean) => void]> = [
     ["Uppercase A–Z", upper, setUpper],
     ["Lowercase a–z", lower, setLower],
-    ["Numbers 0–9", numbers, setNumbers],
+    ["Numbers 0–9", digits, setDigits],
+    ["Exclude look-alikes (Il1O0)", excludeAmbiguous, setExcludeAmbiguous],
     ["Symbols !@#", symbols, setSymbols],
   ];
 
@@ -92,8 +94,8 @@ export function PasswordStrengthChecker() {
           value={strength.label}
           sub={
             <span className="flex items-center gap-1.5">
-              <KeyRound className="size-3" /> Score {strength.score}/4
-              {strength.suggestions.length ? ` · ${strength.suggestions.join(" · ")}` : ""}
+              <KeyRound className="size-3" /> Score {strength.score}/4 · {strength.entropyBits} bits
+              {strength.hints.length ? ` · ${strength.hints.join(" · ")}` : ""}
             </span>
           }
         />
