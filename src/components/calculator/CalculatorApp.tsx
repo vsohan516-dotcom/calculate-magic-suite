@@ -1,5 +1,8 @@
 import { useCallback, useState } from "react";
-import { Calculator as CalcIcon, FlaskConical, History, Moon, Sliders, Sun } from "lucide-react";
+import {
+  Atom, Calculator as CalcIcon, FlaskConical, History, Moon, NotebookPen, ScanLine, Sliders,
+  Sparkles, Sun, Type,
+} from "lucide-react";
 import { Toaster } from "@/components/ui/sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -22,6 +25,14 @@ import { CountdownTimer, DateDiffCalc, Stopwatch, TimeCalc } from "@/components/
 import {
   AsciiConverter, BaseConverter, DataSizeConverter, RomanConverter,
 } from "@/components/calculator/ConverterTools";
+import { AiSolver } from "@/components/calculator/AiSolver";
+import { OcrTool, QrGenerator, QrScanner } from "@/components/calculator/ScanTools";
+import { PasswordGenerator, PasswordStrengthChecker } from "@/components/calculator/SecurityTools";
+import { TextTools } from "@/components/calculator/TextTools";
+import {
+  ConstantsTable, MolarMassCalc, PeriodicTableLookup, PhysicsCalc,
+} from "@/components/calculator/ScienceTools";
+import { NotesVault } from "@/components/calculator/NotesVault";
 import { useHistory } from "@/hooks/use-history";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -29,7 +40,8 @@ export function CalculatorApp() {
   const history = useHistory();
   const { theme, toggle } = useTheme();
   const [mode, setMode] = useState<
-    "standard" | "scientific" | "tools" | "convert" | "finance" | "health" | "time"
+    | "standard" | "scientific" | "tools" | "convert" | "finance" | "health" | "time"
+    | "ai" | "scan" | "text" | "lab" | "notes"
   >("standard");
 
   const commitMisc = useCallback(
@@ -101,7 +113,7 @@ export function CalculatorApp() {
       <main className="mx-auto grid max-w-6xl gap-6 px-4 pb-12 sm:px-6 lg:grid-cols-[minmax(0,1fr)_360px]">
         <section className="space-y-4">
           <Tabs value={mode} onValueChange={(v) => setMode(v as typeof mode)}>
-            <TabsList className="glass-panel grid h-auto w-full grid-cols-4 gap-1 rounded-2xl p-1.5 sm:grid-cols-7">
+            <TabsList className="glass-panel grid h-auto w-full grid-cols-4 gap-1 rounded-2xl p-1.5 sm:grid-cols-6 lg:grid-cols-12">
               <TabsTrigger value="standard" className="gap-1.5 rounded-xl py-2">
                 <CalcIcon className="size-4" />
                 <span className="hidden sm:inline">Standard</span>
@@ -129,6 +141,26 @@ export function CalculatorApp() {
               <TabsTrigger value="time" className="gap-1.5 rounded-xl py-2">
                 <span className="text-sm">⏱</span>
                 <span className="hidden sm:inline">Time</span>
+              </TabsTrigger>
+              <TabsTrigger value="ai" className="gap-1.5 rounded-xl py-2">
+                <Sparkles className="size-4" />
+                <span className="hidden sm:inline">AI</span>
+              </TabsTrigger>
+              <TabsTrigger value="scan" className="gap-1.5 rounded-xl py-2">
+                <ScanLine className="size-4" />
+                <span className="hidden sm:inline">Scan</span>
+              </TabsTrigger>
+              <TabsTrigger value="text" className="gap-1.5 rounded-xl py-2">
+                <Type className="size-4" />
+                <span className="hidden sm:inline">Text</span>
+              </TabsTrigger>
+              <TabsTrigger value="lab" className="gap-1.5 rounded-xl py-2">
+                <Atom className="size-4" />
+                <span className="hidden sm:inline">Lab</span>
+              </TabsTrigger>
+              <TabsTrigger value="notes" className="gap-1.5 rounded-xl py-2">
+                <NotebookPen className="size-4" />
+                <span className="hidden sm:inline">Notes</span>
               </TabsTrigger>
             </TabsList>
 
@@ -177,6 +209,28 @@ export function CalculatorApp() {
               <DateDiffCalc onCommit={commitMisc} />
               <Stopwatch />
               <CountdownTimer />
+            </TabsContent>
+            <TabsContent value="ai" className="animate-pop mt-4 space-y-4">
+              <AiSolver onCommit={commitMisc} />
+            </TabsContent>
+            <TabsContent value="scan" className="animate-pop mt-4 space-y-4">
+              <QrGenerator />
+              <QrScanner />
+              <OcrTool />
+            </TabsContent>
+            <TabsContent value="text" className="animate-pop mt-4 space-y-4">
+              <TextTools />
+              <PasswordGenerator />
+              <PasswordStrengthChecker />
+            </TabsContent>
+            <TabsContent value="lab" className="animate-pop mt-4 space-y-4">
+              <ConstantsTable />
+              <PhysicsCalc onCommit={commitMisc} />
+              <MolarMassCalc onCommit={commitMisc} />
+              <PeriodicTableLookup />
+            </TabsContent>
+            <TabsContent value="notes" className="animate-pop mt-4 space-y-4">
+              <NotesVault />
             </TabsContent>
           </Tabs>
         </section>
