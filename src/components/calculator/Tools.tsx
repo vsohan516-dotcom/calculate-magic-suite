@@ -691,3 +691,134 @@ export function AsciiUnicode({ onCommit }: { onCommit: CommitFn }) {
     </ToolFrame>
   );
 }
+
+/* -------------------- Newly added financial tools for Phase 1 Batch 1 -------------------- */
+
+/* Simple Interest Calculator */
+export function SimpleInterestCalc({ onCommit }: { onCommit: CommitFn }) {
+  const [principal, setPrincipal] = useState("1000");
+  const [rate, setRate] = useState("5");
+  const [years, setYears] = useState("1");
+
+  const P = num(principal);
+  const r = num(rate);
+  const t = num(years);
+  const ok = [P, r, t].every(Number.isFinite) && P >= 0 && t >= 0;
+  const interest = ok ? (P * r * t) / 100 : NaN;
+  const total = ok ? P + interest : NaN;
+
+  return (
+    <ToolFrame
+      title="Simple Interest"
+      expression={`${P} @ ${r}% for ${t}y`}
+      onCommit={(e, r) => onCommit(e, r, "Simple Interest")}
+      result={
+        ok
+          ? {
+              label: "Interest",
+              value: formatResult(interest),
+              sub: <>Total {formatResult(total)}</>,
+            }
+          : null
+      }
+    >
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Field id="si-p" label="Principal" value={principal} onChange={setPrincipal} />
+        <Field id="si-r" label="Rate (annual)" value={rate} onChange={setRate} suffix="%" />
+        <Field id="si-t" label="Years" value={years} onChange={setYears} />
+      </div>
+    </ToolFrame>
+  );
+}
+
+/* Compound Interest Calculator */
+export function CompoundInterestCalc({ onCommit }: { onCommit: CommitFn }) {
+  const [principal, setPrincipal] = useState("1000");
+  const [rate, setRate] = useState("5");
+  const [years, setYears] = useState("1");
+  const [compounds, setCompounds] = useState("1");
+
+  const P = num(principal);
+  const r = num(rate) / 100;
+  const t = num(years);
+  const n = Math.max(1, Math.floor(num(compounds) || 1));
+  const ok = [P, r, t, n].every(Number.isFinite) && P >= 0 && t >= 0 && n > 0;
+
+  const amount = useMemo(() => {
+    if (!ok) return NaN;
+    return P * Math.pow(1 + r / n, n * t);
+  }, [P, r, t, n, ok]);
+
+  const interest = ok ? amount - P : NaN;
+
+  return (
+    <ToolFrame
+      title="Compound Interest"
+      expression={`${P} @ ${ (r*100).toFixed(2) }% for ${t}y`}
+      onCommit={(e, r) => onCommit(e, r, "Compound Interest")}
+      result={
+        ok
+          ? {
+              label: "Amount",
+              value: formatResult(amount),
+              sub: <>Interest {formatResult(interest)}</>,
+            }
+          : null
+      }
+    >
+      <div className="grid gap-3 sm:grid-cols-4">
+        <Field id="ci-p" label="Principal" value={principal} onChange={setPrincipal} />
+        <Field id="ci-r" label="Annual rate" value={rate} onChange={setRate} suffix="%" />
+        <Field id="ci-t" label="Years" value={years} onChange={setYears} />
+        <Field id="ci-n" label="Compounds/year" value={compounds} onChange={setCompounds} />
+      </div>
+    </ToolFrame>
+  );
+}
+
+/* SIP (Systematic Investment Plan) Calculator */
+export function SipCalc({ onCommit }: { onCommit: CommitFn }) {
+  const [monthly, setMonthly] = useState("1000");
+  const [rate, setRate] = useState("12");
+  const [years, setYears] = useState("10");
+
+  const m = num(monthly);
+  const annual = num(rate) / 100;
+  const t = num(years);
+  const n = Math.max(0, Math.floor(t * 12));
+  const ok = [m, annual, t].every(Number.isFinite) && m >= 0 && t >= 0;
+
+  const fv = useMemo(() => {
+    if (!ok) return NaN;
+    if (annual === 0) return m * n;
+    const r = annual / 12;
+    // Future value of monthly SIP (assumes contributions at end of period)
+    return m * ((Math.pow(1 + r, n) - 1) / r) * (1 + r);
+  }, [m, annual, n, ok]);
+
+  const invested = ok ? m * n : NaN;
+  const gain = ok ? fv - invested : NaN;
+
+  return (
+    <ToolFrame
+      title="SIP Calculator"
+      expression={`${m}/mo @ ${(annual*100).toFixed(2)}% for ${t}y`}
+      onCommit={(e, r) => onCommit(e, r, "SIP")}
+      result={
+        ok
+          ? {
+              label: "Future value",
+              value: formatResult(fv),
+              sub: <>Invested {formatResult(invested)} · Gain {formatResult(gain)}</>,
+            }
+          : null
+      }
+    >
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Field id="sip-m" label="Monthly investment" value={monthly} onChange={setMonthly} />
+        <Field id="sip-r" label="Expected annual return" value={rate} onChange={setRate} suffix="%" />
+        <Field id="sip-t" label="Years" value={years} onChange={setYears} />
+      </div>
+    </ToolFrame>
+  );
+}
