@@ -273,4 +273,3 @@ function parseGroup(source: string): Map<string, number> {
 
   return counts;
 }
-],
