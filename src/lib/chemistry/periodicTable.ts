@@ -23,7 +23,8 @@ export interface ChemicalElement {
   period: number;
 }
 
-const RAW = `1|H|Hydrogen|1.008|nonmetal|1|1
+const RAW = `
+1|H|Hydrogen|1.008|nonmetal|1|1
 2|He|Helium|4.0026|noble|18|1
 3|Li|Lithium|6.94|alkali|1|2
 4|Be|Beryllium|9.0122|alkaline|2|2
@@ -140,7 +141,8 @@ const RAW = `1|H|Hydrogen|1.008|nonmetal|1|1
 115|Mc|Moscovium|290|post-transition|15|7
 116|Lv|Livermorium|293|post-transition|16|7
 117|Ts|Tennessine|294|halogen|17|7
-118|Og|Oganesson|294|noble|18|7`;
+118|Og|Oganesson|294|noble|18|7
+`;
 
 export const ELEMENTS: ChemicalElement[] = RAW.trim()
   .split("\n")
@@ -158,7 +160,7 @@ export const ELEMENTS: ChemicalElement[] = RAW.trim()
   });
 
 export const BY_SYMBOL: Record<string, ChemicalElement> = Object.fromEntries(
-  ELEMENTS.map((e) => [e.symbol, e])
+  ELEMENTS.map((e) => [e.symbol, e]),
 );
 
 export const CATEGORY_LABELS: Record<ElementCategory, string> = {
@@ -194,6 +196,7 @@ export function molarMass(formula: string): MolarMassResult {
   const input = formula.replace(/\s+/g, "").replace(/[·.]/g, "+");
   if (!input) throw new Error("Enter a formula");
 
+
   const counts = new Map<string, number>();
   const addCounts = (source: Map<string, number>, multiplier: number) => {
     for (const [symbol, n] of source) counts.set(symbol, (counts.get(symbol) ?? 0) + n * multiplier);
@@ -207,12 +210,17 @@ export function molarMass(formula: string): MolarMassResult {
   }
 
   let total = 0;
-  for (const [symbol, n] of counts) total += BY_SYMBOL[symbol].mass * n;
+  for (const [symbol, n] of counts) {
+    const el = BY_SYMBOL[symbol];
+    if (!el) throw new Error(`Unknown element "${symbol}"`);
+    total += el.mass * n;
+  }
   if (total <= 0) throw new Error("Enter a formula");
 
   const composition = [...counts.entries()]
     .map(([symbol, count]) => {
-      const mass = BY_SYMBOL[symbol].mass * count;
+      const el = BY_SYMBOL[symbol]!;
+      const mass = el.mass * count;
       return { symbol, count, mass, percent: (mass / total) * 100 };
     })
     .sort((a, b) => b.mass - a.mass);
@@ -265,3 +273,4 @@ function parseGroup(source: string): Map<string, number> {
 
   return counts;
 }
+],
