@@ -12,6 +12,7 @@ import { CurrencyConverter } from "@/components/calculator/CurrencyConverter";
 import {
   AgeCalc, BmiCalc, DiscountCalc, EmiCalc, GstCalc, PercentageCalc, TipCalc,
 } from "@/components/calculator/Tools";
+import { Chemistry } from "@/components/calculator/Chemistry";
 import { useHistory } from "@/hooks/use-history";
 import { useTheme } from "@/hooks/use-theme";
 
@@ -120,6 +121,7 @@ export function CalculatorApp() {
               <EmiCalc onCommit={commitMisc} />
               <BmiCalc onCommit={commitMisc} />
               <AgeCalc onCommit={commitMisc} />
+              <Chemistry onCommit={commitMisc} />
             </TabsContent>
             <TabsContent value="convert" className="animate-pop mt-4 space-y-4">
               <UnitConverter onCommit={(e, r) => commitMisc(e, r, "Unit")} />
