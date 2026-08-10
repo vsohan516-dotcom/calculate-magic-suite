@@ -39,6 +39,10 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
     toast.success(`${sym} added to formula`);
   };
 
+  const TILE = 84; // px fixed tile size to keep readability on mobile
+  const GAP = 6; // gap between tiles
+  const TABLE_WIDTH = TILE * 18 + GAP * 17; // explicit width so grid doesn't compress on narrow screens
+
   return (
     <div className="space-y-4">
       <div className="glass-panel p-4">
@@ -49,32 +53,47 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
 
         <div className="mt-4 grid gap-2">
           <ScrollArea className="h-64">
-            <div
-              className="relative"
-              style={{
-                display: "grid",
-                gridTemplateColumns: "repeat(18, minmax(0, 1fr))",
-                gridAutoRows: 72,
-                gap: 6,
-              }}
-            >
-              {ELEMENTS.map((el) => {
-                const pos = gridPosition(el);
-                return (
-                  <button
-                    key={el.symbol}
-                    type="button"
-                    onClick={() => selectElement(el.symbol)}
-                    className="rounded-md border p-2 text-center bg-muted/10 hover:shadow-lg"
-                    style={{ gridColumn: pos.column, gridRow: pos.row }}
-                    aria-label={`${el.name} (${el.symbol})`}
-                  >
-                    <div className="text-[11px] text-muted-foreground">{el.number}</div>
-                    <div className="font-display text-lg font-semibold">{el.symbol}</div>
-                    <div className="text-xs text-muted-foreground">{el.mass}</div>
-                  </button>
-                );
-              })}
+            {/* Horizontal scroll container to preserve readable tile sizes on narrow screens */}
+            <div style={{ overflowX: "auto", overflowY: "hidden" }}>
+              <div
+                className="relative"
+                style={{
+                  display: "grid",
+                  gridTemplateColumns: `repeat(18, ${TILE}px)`,
+                  gridAutoRows: TILE,
+                  gap: GAP,
+                  paddingBottom: GAP,
+                  width: TABLE_WIDTH,
+                }}
+              >
+                {ELEMENTS.map((el) => {
+                  const pos = gridPosition(el);
+                  return (
+                    <button
+                      key={el.symbol}
+                      type="button"
+                      onClick={() => selectElement(el.symbol)}
+                      className="rounded-md border p-2 text-center bg-muted/10 hover:shadow-lg"
+                      style={{
+                        gridColumnStart: pos.column,
+                        gridRowStart: pos.row,
+                        width: TILE - 12,
+                        height: TILE - 12,
+                        boxSizing: "border-box",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                      aria-label={`${el.name} (${el.symbol})`}
+                    >
+                      <div className="text-[11px] text-muted-foreground">{el.number}</div>
+                      <div className="font-display text-lg font-semibold">{el.symbol}</div>
+                      <div className="text-xs text-muted-foreground">{el.mass}</div>
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           </ScrollArea>
 
