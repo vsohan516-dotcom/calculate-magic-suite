@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useRef, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -43,6 +43,74 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
   const GAP = 6; // gap between tiles
   const TABLE_WIDTH = TILE * 18 + GAP * 17; // explicit width so grid doesn't compress on narrow screens
 
+  // Modal / expanded view state for mobile
+  const [expanded, setExpanded] = useState(false);
+  const tableContainerRef = useRef<HTMLDivElement | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth <= 640);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
+  // Prevent background scrolling when modal open
+  useEffect(() => {
+    if (expanded) {
+      const prev = document.body.style.overflow;
+      document.body.style.overflow = "hidden";
+      return () => { document.body.style.overflow = prev; };
+    }
+    return;
+  }, [expanded]);
+
+  // Render the grid (extracted so we can reuse it in modal and inline)
+  const renderGrid = (opts?: { tile?: number }) => {
+    const tile = opts?.tile ?? TILE;
+    return (
+      <div
+        className="relative"
+        style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(18, ${tile}px)`,
+          gridAutoRows: tile,
+          gap: GAP,
+          paddingBottom: GAP,
+          width: tile * 18 + GAP * 17,
+        }}
+      >
+        {ELEMENTS.map((el) => {
+          const pos = gridPosition(el);
+          return (
+            <button
+              key={el.symbol}
+              type="button"
+              onClick={(e) => { e.stopPropagation(); selectElement(el.symbol); }}
+              className="rounded-md border p-2 text-center bg-muted/10 hover:shadow-lg"
+              style={{
+                gridColumnStart: pos.column,
+                gridRowStart: pos.row,
+                width: tile - 12,
+                height: tile - 12,
+                boxSizing: "border-box",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              aria-label={`${el.name} (${el.symbol})`}
+            >
+              <div className="text-[11px] text-muted-foreground">{el.number}</div>
+              <div className="font-display text-lg font-semibold">{el.symbol}</div>
+              <div className="text-xs text-muted-foreground">{el.mass}</div>
+            </button>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-4">
       <div className="glass-panel p-4">
@@ -53,47 +121,17 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
 
         <div className="mt-4 grid gap-2">
           <ScrollArea className="h-64">
-            {/* Horizontal scroll container to preserve readable tile sizes on narrow screens */}
-            <div style={{ overflowX: "auto", overflowY: "hidden" }}>
-              <div
-                className="relative"
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(18, ${TILE}px)`,
-                  gridAutoRows: TILE,
-                  gap: GAP,
-                  paddingBottom: GAP,
-                  width: TABLE_WIDTH,
-                }}
-              >
-                {ELEMENTS.map((el) => {
-                  const pos = gridPosition(el);
-                  return (
-                    <button
-                      key={el.symbol}
-                      type="button"
-                      onClick={() => selectElement(el.symbol)}
-                      className="rounded-md border p-2 text-center bg-muted/10 hover:shadow-lg"
-                      style={{
-                        gridColumnStart: pos.column,
-                        gridRowStart: pos.row,
-                        width: TILE - 12,
-                        height: TILE - 12,
-                        boxSizing: "border-box",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                      aria-label={`${el.name} (${el.symbol})`}
-                    >
-                      <div className="text-[11px] text-muted-foreground">{el.number}</div>
-                      <div className="font-display text-lg font-semibold">{el.symbol}</div>
-                      <div className="text-xs text-muted-foreground">{el.mass}</div>
-                    </button>
-                  );
-                })}
-              </div>
+            {/* Inline table container. On mobile tapping the empty area opens expanded view. */}
+            <div
+              ref={tableContainerRef}
+              style={{ overflowX: "auto", overflowY: "hidden" }}
+              onClick={(e) => {
+                // If mobile and user tapped the background (not a button), open expanded view
+                if (!isMobile) return;
+                if (e.target === tableContainerRef.current) setExpanded(true);
+              }}
+            >
+              {renderGrid()}
             </div>
           </ScrollArea>
 
@@ -133,6 +171,28 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
           ) : null}
         </div>
       </div>
+
+      {/* Expanded full-screen modal for mobile */}
+      {expanded && (
+        <div className="fixed inset-0 z-50 flex flex-col bg-black/70">
+          <div className="flex items-center justify-between p-3 backdrop-blur-sm">
+            <h3 className="text-lg font-semibold">Periodic Table</h3>
+            <div className="flex items-center gap-2">
+              <Button variant="ghost" onClick={() => setExpanded(false)}>Close</Button>
+            </div>
+          </div>
+
+          <div className="flex-1 overflow-auto p-4 bg-transparent">
+            <div style={{ minWidth: TABLE_WIDTH }}>
+              {/* The expanded grid is inside a scrollable container so both axes can scroll */}
+              <div style={{ overflow: "auto" }}>
+                {renderGrid({ tile: Math.max(TILE, 92) })}
+                {/* Render lanthanides/actinides rows if needed by gridPosition (they're already placed) */}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div>
         <h3 className="font-display text-sm font-semibold">Element details</h3>
