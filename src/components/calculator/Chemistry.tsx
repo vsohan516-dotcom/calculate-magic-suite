@@ -40,6 +40,8 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
   };
 
   const TILE = 84; // px fixed tile size to keep readability on mobile
+  const GAP = 6; // gap between tiles
+  const TABLE_WIDTH = TILE * 18 + GAP * 17; // explicit width so grid doesn't compress on narrow screens
 
   return (
     <div className="space-y-4">
@@ -59,8 +61,9 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
                   display: "grid",
                   gridTemplateColumns: `repeat(18, ${TILE}px)`,
                   gridAutoRows: TILE,
-                  gap: 6,
-                  paddingBottom: 6,
+                  gap: GAP,
+                  paddingBottom: GAP,
+                  width: TABLE_WIDTH,
                 }}
               >
                 {ELEMENTS.map((el) => {
@@ -72,10 +75,11 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
                       onClick={() => selectElement(el.symbol)}
                       className="rounded-md border p-2 text-center bg-muted/10 hover:shadow-lg"
                       style={{
-                        gridColumn: pos.column,
-                        gridRow: pos.row,
-                        minWidth: TILE - 12,
-                        minHeight: TILE - 12,
+                        gridColumnStart: pos.column,
+                        gridRowStart: pos.row,
+                        width: TILE - 12,
+                        height: TILE - 12,
+                        boxSizing: "border-box",
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
