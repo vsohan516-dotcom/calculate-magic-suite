@@ -10,7 +10,13 @@ import { StatsChart } from "@/components/calculator/StatsChart";
 import { UnitConverter } from "@/components/calculator/UnitConverter";
 import { CurrencyConverter } from "@/components/calculator/CurrencyConverter";
 import {
-  AgeCalc, BmiCalc, DiscountCalc, EmiCalc, GstCalc, PercentageCalc, TipCalc,
+  AgeCalc,
+  BmiCalc,
+  DiscountCalc,
+  EmiCalc,
+  GstCalc,
+  PercentageCalc,
+  TipCalc,
 } from "@/components/calculator/Tools";
 import { Chemistry } from "@/components/calculator/Chemistry";
 import { useHistory } from "@/hooks/use-history";

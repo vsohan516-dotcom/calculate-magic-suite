@@ -17,10 +17,14 @@ export function ChemistryQuiz() {
         <div className="text-sm">{q.question}</div>
         <div className="mt-2 grid gap-2">
           {q.options?.map((o) => (
-            <button key={o} className="btn" onClick={() => onAnswer(o)}>{o}</button>
+            <button key={o} className="btn" onClick={() => onAnswer(o)}>
+              {o}
+            </button>
           ))}
         </div>
-        <div className="mt-3 text-xs">Score: {score} / {SAMPLE_QUIZ.length}</div>
+        <div className="mt-3 text-xs">
+          Score: {score} / {SAMPLE_QUIZ.length}
+        </div>
       </div>
     </div>
   );

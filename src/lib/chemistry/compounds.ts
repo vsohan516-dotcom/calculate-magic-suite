@@ -11,6 +11,11 @@ export function analyzeCompound(formula: string): CompoundAnalysis {
   return {
     formula,
     molarMass: res.mass,
-    elements: res.composition.map((c) => ({ symbol: c.symbol, count: c.count, mass: c.mass, percent: c.percent })),
+    elements: res.composition.map((c) => ({
+      symbol: c.symbol,
+      count: c.count,
+      mass: c.mass,
+      percent: c.percent,
+    })),
   };
 }

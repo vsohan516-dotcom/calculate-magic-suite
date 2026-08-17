@@ -27,7 +27,7 @@ export function validateFormula(formula: string): { valid: boolean; error?: stri
       stack.pop();
     }
     // allow letters, digits, parentheses, dot, middle dot
-    if (!/^[A-Za-z0-9()·\. ]$/.test(ch)) return { valid: false, error: `Invalid character: ${ch}` };
+    if (!/^[A-Za-z0-9()·. ]$/.test(ch)) return { valid: false, error: `Invalid character: ${ch}` };
   }
   if (stack.length) return { valid: false, error: "Unbalanced parentheses" };
   return { valid: true };

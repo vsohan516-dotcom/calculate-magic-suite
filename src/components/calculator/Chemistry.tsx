@@ -16,7 +16,10 @@ type CommitFn = (expression: string, result: string, category?: string) => void;
 export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
   const [selected, setSelected] = useState<string | null>(null);
   const [formula, setFormula] = useState("");
-  const [molar, setMolar] = useState<{ mass: number; composition: Array<{ symbol: string; count: number; mass: number; percent: number }> } | null>(null);
+  const [molar, setMolar] = useState<{
+    mass: number;
+    composition: Array<{ symbol: string; count: number; mass: number; percent: number }>;
+  } | null>(null);
 
   const bySymbol = useMemo(() => {
     return Object.fromEntries(ELEMENTS.map((e) => [e.symbol, e]));
@@ -65,7 +68,9 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
     if (expanded) {
       const prev = document.body.style.overflow;
       document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = prev; };
+      return () => {
+        document.body.style.overflow = prev;
+      };
     }
     return;
   }, [expanded]);
@@ -91,7 +96,10 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
             <button
               key={el.symbol}
               type="button"
-              onClick={(e) => { e.stopPropagation(); selectElement(el.symbol); }}
+              onClick={(e) => {
+                e.stopPropagation();
+                selectElement(el.symbol);
+              }}
               className="rounded-md border p-2 text-center bg-muted/10 hover:shadow-lg"
               style={{
                 gridColumnStart: pos.column,
@@ -121,7 +129,9 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
       <div className="glass-panel p-4">
         <div className="flex items-center justify-between">
           <h2 className="font-display text-lg font-semibold">Periodic Table</h2>
-          <div className="text-xs text-muted-foreground">Browse elements · Click to view details</div>
+          <div className="text-xs text-muted-foreground">
+            Browse elements · Click to view details
+          </div>
         </div>
 
         <div className="mt-4 grid gap-2">
@@ -147,7 +157,15 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
             </div>
             <div className="flex items-end gap-2">
               <Button onClick={onCalculate}>Calculate molar mass</Button>
-              <Button variant="ghost" onClick={() => { setFormula(""); setMolar(null); }}>Clear</Button>
+              <Button
+                variant="ghost"
+                onClick={() => {
+                  setFormula("");
+                  setMolar(null);
+                }}
+              >
+                Clear
+              </Button>
             </div>
           </div>
 
@@ -155,8 +173,12 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
             <div className="mt-2 glass-panel p-3">
               <div className="flex items-center justify-between">
                 <div>
-                  <div className="text-xs uppercase tracking-widest text-muted-foreground">Molar mass</div>
-                  <div className="mt-1 font-display text-2xl font-semibold">{formatResult(molar.mass)} g/mol</div>
+                  <div className="text-xs uppercase tracking-widest text-muted-foreground">
+                    Molar mass
+                  </div>
+                  <div className="mt-1 font-display text-2xl font-semibold">
+                    {formatResult(molar.mass)} g/mol
+                  </div>
                 </div>
                 <div className="text-sm text-muted-foreground">Composition</div>
               </div>
@@ -166,9 +188,13 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
                   <div key={c.symbol} className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="font-mono w-12">{c.symbol}</div>
-                      <div className="text-sm">{c.count} × {formatResult(c.mass / c.count)} g</div>
+                      <div className="text-sm">
+                        {c.count} × {formatResult(c.mass / c.count)} g
+                      </div>
                     </div>
-                    <div className="text-sm text-muted-foreground">{formatResult(c.mass)} g · {formatResult(c.percent)}%</div>
+                    <div className="text-sm text-muted-foreground">
+                      {formatResult(c.mass)} g · {formatResult(c.percent)}%
+                    </div>
                   </div>
                 ))}
               </div>
@@ -194,7 +220,9 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
         <div className="flex items-center justify-between">
           <h3 className="font-display text-sm font-semibold">Chemistry Hub</h3>
           <div>
-            <Button variant="ghost" onClick={() => setHubOpen((s) => !s)}>{hubOpen ? "Close Hub" : "Open Chemistry Hub"}</Button>
+            <Button variant="ghost" onClick={() => setHubOpen((s) => !s)}>
+              {hubOpen ? "Close Hub" : "Open Chemistry Hub"}
+            </Button>
           </div>
         </div>
         {hubOpen ? (
@@ -212,7 +240,8 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
           {selected ? (
             (() => {
               const el = bySymbol[selected];
-              if (!el) return <div className="text-sm text-muted-foreground">Element not found</div>;
+              if (!el)
+                return <div className="text-sm text-muted-foreground">Element not found</div>;
               return (
                 <div className="glass-panel p-4">
                   <div className="flex items-start gap-4">
@@ -221,10 +250,14 @@ export function Chemistry({ onCommit }: { onCommit?: CommitFn }) {
                       <div className="text-sm text-muted-foreground">{el.name}</div>
                       <div className="mt-2 text-xs">Atomic number: {el.number}</div>
                       <div className="text-xs">Atomic mass: {el.mass}</div>
-                      <div className="text-xs">Group: {el.group} · Period: {el.period}</div>
+                      <div className="text-xs">
+                        Group: {el.group} · Period: {el.period}
+                      </div>
                       <div className="mt-2">
                         <Button onClick={() => insertSymbol(el.symbol)}>Add to formula</Button>
-                        <Button variant="ghost" onClick={() => setSelected(null)} className="ml-2">Close</Button>
+                        <Button variant="ghost" onClick={() => setSelected(null)} className="ml-2">
+                          Close
+                        </Button>
                       </div>
                     </div>
                   </div>

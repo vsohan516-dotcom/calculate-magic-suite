@@ -5,10 +5,25 @@
 export type AngleMode = "deg" | "rad";
 
 const FUNCS = [
-  "sin", "cos", "tan", "asin", "acos", "atan",
-  "sinh", "cosh", "tanh",
-  "sqrt", "cbrt", "log", "ln", "exp",
-  "abs", "floor", "ceil", "round", "fact",
+  "sin",
+  "cos",
+  "tan",
+  "asin",
+  "acos",
+  "atan",
+  "sinh",
+  "cosh",
+  "tanh",
+  "sqrt",
+  "cbrt",
+  "log",
+  "ln",
+  "exp",
+  "abs",
+  "floor",
+  "ceil",
+  "round",
+  "fact",
 ];
 
 function factorial(n: number): number {
@@ -51,7 +66,7 @@ function replacePower(expr: string): string {
 function replacePercent(expr: string): string {
   // Pattern: <number>+/-<number>% => apply percent of left operand.
   expr = expr.replace(
-    /(\d+(?:\.\d+)?)\s*([+\-])\s*(\d+(?:\.\d+)?)%/g,
+    /(\d+(?:\.\d+)?)\s*([+-])\s*(\d+(?:\.\d+)?)%/g,
     (_m, a, op, b) => `(${a}${op}(${a}*${b}/100))`,
   );
   // Remaining trailing % => /100
@@ -63,7 +78,7 @@ function validate(expr: string): void {
   // Allowed characters and identifiers only.
   const stripped = expr
     .replace(/\b(?:Math\.[A-Za-z]+|pow|fact|PI|E)\b/g, "")
-    .replace(/[0-9+\-*/().,\s*]/g, "");
+    .replace(/[0-9+*/().,\s-]/g, "");
   if (stripped.length > 0) {
     throw new Error("Invalid characters in expression");
   }
@@ -116,7 +131,7 @@ export function evaluate(rawInput: string, angle: AngleMode = "deg"): number {
   validate(expr);
 
   // Build a sandbox where only Math, PI, E, pow, fact exist.
-  // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func
+
   const fn = new Function("Math", "PI", "E", "pow", "fact", `"use strict"; return (${expr});`);
   const value = fn(Math, Math.PI, Math.E, Math.pow, factorial);
   if (typeof value !== "number" || Number.isNaN(value)) throw new Error("Math error");

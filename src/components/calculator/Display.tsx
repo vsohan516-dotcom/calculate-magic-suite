@@ -44,7 +44,11 @@ export function Display({
               onClick={onMic}
               disabled={!micSupported}
               aria-label={listening ? "Stop voice input" : "Start voice input"}
-              className={cn("size-8", listening && "text-primary animate-pulse", !micSupported && "opacity-40")}
+              className={cn(
+                "size-8",
+                listening && "text-primary animate-pulse",
+                !micSupported && "opacity-40",
+              )}
             >
               {listening ? <MicOff className="size-4" /> : <Mic className="size-4" />}
             </Button>

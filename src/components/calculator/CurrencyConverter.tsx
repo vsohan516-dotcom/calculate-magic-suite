@@ -14,8 +14,24 @@ import { toast } from "sonner";
 
 // Common currencies displayed in selector.
 const CURRENCIES = [
-  "USD", "EUR", "GBP", "JPY", "INR", "AUD", "CAD", "CHF", "CNY", "SEK",
-  "NZD", "SGD", "HKD", "KRW", "MXN", "BRL", "ZAR", "AED",
+  "USD",
+  "EUR",
+  "GBP",
+  "JPY",
+  "INR",
+  "AUD",
+  "CAD",
+  "CHF",
+  "CNY",
+  "SEK",
+  "NZD",
+  "SGD",
+  "HKD",
+  "KRW",
+  "MXN",
+  "BRL",
+  "ZAR",
+  "AED",
 ];
 
 interface RatesState {
@@ -88,7 +104,6 @@ export function CurrencyConverter({ onCommit }: Props) {
 
   useEffect(() => {
     void load(from);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [from]);
 
   const result = useMemo(() => {
@@ -131,10 +146,14 @@ export function CurrencyConverter({ onCommit }: Props) {
             inputMode="decimal"
           />
           <Select value={from} onValueChange={setFrom}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {CURRENCIES.map((c) => (
-                <SelectItem key={c} value={c}>{c}</SelectItem>
+                <SelectItem key={c} value={c}>
+                  {c}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>
@@ -157,10 +176,14 @@ export function CurrencyConverter({ onCommit }: Props) {
             {loading ? "…" : result || "—"}
           </div>
           <Select value={to} onValueChange={setTo}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {CURRENCIES.map((c) => (
-                <SelectItem key={c} value={c}>{c}</SelectItem>
+                <SelectItem key={c} value={c}>
+                  {c}
+                </SelectItem>
               ))}
             </SelectContent>
           </Select>

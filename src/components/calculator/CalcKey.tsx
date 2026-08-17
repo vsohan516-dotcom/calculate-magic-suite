@@ -16,8 +16,7 @@ const VARIANT_CLASS: Record<KeyVariant, string> = {
   default: "glass-key glass-key-hover text-foreground",
   operator:
     "glass-key glass-key-hover text-accent-foreground bg-[color-mix(in_oklab,var(--accent)_22%,var(--glass))]",
-  accent:
-    "glass-key glass-key-hover text-primary-foreground grad-accent",
+  accent: "glass-key glass-key-hover text-primary-foreground grad-accent",
   equals: "glass-key glass-key-hover text-primary-foreground grad-primary",
   danger:
     "glass-key glass-key-hover text-destructive-foreground bg-[color-mix(in_oklab,var(--destructive)_70%,transparent)]",

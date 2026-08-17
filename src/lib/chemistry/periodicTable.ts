@@ -196,10 +196,10 @@ export function molarMass(formula: string): MolarMassResult {
   const input = formula.replace(/\s+/g, "").replace(/[·.]/g, "+");
   if (!input) throw new Error("Enter a formula");
 
-
   const counts = new Map<string, number>();
   const addCounts = (source: Map<string, number>, multiplier: number) => {
-    for (const [symbol, n] of source) counts.set(symbol, (counts.get(symbol) ?? 0) + n * multiplier);
+    for (const [symbol, n] of source)
+      counts.set(symbol, (counts.get(symbol) ?? 0) + n * multiplier);
   };
 
   for (const part of input.split("+")) {
@@ -254,7 +254,8 @@ function parseGroup(source: string): Map<string, number> {
       const inner = parseGroup(source.slice(i + 1, j - 1));
       i = j;
       const multiplier = readNumber();
-      for (const [symbol, n] of inner) counts.set(symbol, (counts.get(symbol) ?? 0) + n * multiplier);
+      for (const [symbol, n] of inner)
+        counts.set(symbol, (counts.get(symbol) ?? 0) + n * multiplier);
       continue;
     }
 
