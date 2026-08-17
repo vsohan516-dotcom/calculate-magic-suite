@@ -25,7 +25,9 @@ function ToolFrame({ title, children, result, expression, onCommit }: FrameProps
               {result.label}
             </div>
             <div className="mt-1 font-display text-3xl font-semibold text-grad">{result.value}</div>
-            {result.sub ? <div className="mt-1 text-xs text-muted-foreground">{result.sub}</div> : null}
+            {result.sub ? (
+              <div className="mt-1 text-xs text-muted-foreground">{result.sub}</div>
+            ) : null}
           </div>
           {onCommit && expression ? (
             <Button
@@ -46,7 +48,12 @@ function ToolFrame({ title, children, result, expression, onCommit }: FrameProps
 }
 
 function Field({
-  id, label, value, onChange, type = "number", suffix,
+  id,
+  label,
+  value,
+  onChange,
+  type = "number",
+  suffix,
 }: {
   id: string;
   label: string;
@@ -454,7 +461,9 @@ export function PasswordTool({ onCommit }: { onCommit: CommitFn }) {
     return Math.min(6, s);
   }, [length, upper, lower, numbers, symbols]);
 
-  const labelForScore = (s: number) => ["Very weak", "Weak", "OK", "Good", "Strong", "Very strong"][Math.max(0, Math.min(5, s - 1))] ?? "Very weak";
+  const labelForScore = (s: number) =>
+    ["Very weak", "Weak", "OK", "Good", "Strong", "Very strong"][Math.max(0, Math.min(5, s - 1))] ??
+    "Very weak";
 
   return (
     <ToolFrame
@@ -468,16 +477,32 @@ export function PasswordTool({ onCommit }: { onCommit: CommitFn }) {
         <div className="space-y-1.5">
           <Label>Charset</Label>
           <div className="flex flex-wrap gap-2">
-            <Button variant={lower ? "secondary" : "ghost" as any} size="sm" onClick={() => setLower((v) => !v)}>
+            <Button
+              variant={lower ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setLower((v) => !v)}
+            >
               abc
             </Button>
-            <Button variant={upper ? "secondary" : "ghost" as any} size="sm" onClick={() => setUpper((v) => !v)}>
+            <Button
+              variant={upper ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setUpper((v) => !v)}
+            >
               ABC
             </Button>
-            <Button variant={numbers ? "secondary" : "ghost" as any} size="sm" onClick={() => setNumbers((v) => !v)}>
+            <Button
+              variant={numbers ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setNumbers((v) => !v)}
+            >
               123
             </Button>
-            <Button variant={symbols ? "secondary" : "ghost" as any} size="sm" onClick={() => setSymbols((v) => !v)}>
+            <Button
+              variant={symbols ? "secondary" : "ghost"}
+              size="sm"
+              onClick={() => setSymbols((v) => !v)}
+            >
               #%@
             </Button>
           </div>
@@ -516,7 +541,10 @@ export function RandomTools({ onCommit }: { onCommit: CommitFn }) {
     }
     const out: string[] = [];
     for (let i = 0; i < n; i++) {
-      const v = Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1) * (b - a + 1)) + a;
+      const v =
+        Math.floor(
+          (crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1)) * (b - a + 1),
+        ) + a;
       out.push(String(v));
     }
     setResult(out);
@@ -528,7 +556,9 @@ export function RandomTools({ onCommit }: { onCommit: CommitFn }) {
       title="Random"
       expression={`${min}-${max} ×${count}`}
       onCommit={(e, r) => onCommit(e, r, "Random")}
-      result={result.length ? { label: `Generated ${result.length}`, value: result.join(", ") } : null}
+      result={
+        result.length ? { label: `Generated ${result.length}`, value: result.join(", ") } : null
+      }
     >
       <div className="grid gap-3 sm:grid-cols-3">
         <Field id="rnd-min" label="Min" value={min} onChange={setMin} />
@@ -541,7 +571,9 @@ export function RandomTools({ onCommit }: { onCommit: CommitFn }) {
           variant="ghost"
           onClick={() => {
             // Dice quick: roll a d6
-            const v = Math.floor(crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1) * 6) + 1;
+            const v =
+              Math.floor((crypto.getRandomValues(new Uint32Array(1))[0] / (0xffffffff + 1)) * 6) +
+              1;
             setResult([String(v)]);
             onCommit?.(`d6`, String(v), "Dice");
             toast.success(`Rolled d6 → ${v}`);
@@ -573,7 +605,7 @@ function toBase(n: number, base: number) {
 
 export function BaseConverter({ onCommit }: { onCommit: CommitFn }) {
   const [value, setValue] = useState("0");
-  const [base, setBase] = useState<2 | 8 | 10 | 16>(10 as 10);
+  const [base, setBase] = useState<2 | 8 | 10 | 16>(10 as const);
 
   const parsed = useMemo(() => {
     try {
@@ -603,7 +635,12 @@ export function BaseConverter({ onCommit }: { onCommit: CommitFn }) {
           <Label>Base</Label>
           <div className="flex gap-2">
             {[2, 8, 10, 16].map((b) => (
-              <Button key={b} variant={base === b ? "secondary" : "ghost" as any} size="sm" onClick={() => setBase(b as any)}>
+              <Button
+                key={b}
+                variant={base === b ? "secondary" : "ghost"}
+                size="sm"
+                onClick={() => setBase(b as 2 | 8 | 10 | 16)}
+              >
                 {b}
               </Button>
             ))}
@@ -627,9 +664,19 @@ export function BaseConverter({ onCommit }: { onCommit: CommitFn }) {
 function toRoman(num: number): string {
   if (!Number.isFinite(num) || num <= 0 || num >= 4000) return "";
   const romans: [number, string][] = [
-    [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
-    [100, "C"], [90, "XC"], [50, "L"], [40, "XL"],
-    [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"],
+    [1000, "M"],
+    [900, "CM"],
+    [500, "D"],
+    [400, "CD"],
+    [100, "C"],
+    [90, "XC"],
+    [50, "L"],
+    [40, "XL"],
+    [10, "X"],
+    [9, "IX"],
+    [5, "V"],
+    [4, "IV"],
+    [1, "I"],
   ];
   let res = "";
   let n = Math.floor(num);
@@ -665,7 +712,11 @@ export function RomanConverter({ onCommit }: { onCommit: CommitFn }) {
 export function AsciiUnicode({ onCommit }: { onCommit: CommitFn }) {
   const [text, setText] = useState("");
   const codes = useMemo(() => {
-    return Array.from(text).map((ch) => ({ ch, dec: ch.charCodeAt(0), hex: ch.charCodeAt(0).toString(16).toUpperCase() }));
+    return Array.from(text).map((ch) => ({
+      ch,
+      dec: ch.charCodeAt(0),
+      hex: ch.charCodeAt(0).toString(16).toUpperCase(),
+    }));
   }, [text]);
 
   return (
@@ -683,7 +734,9 @@ export function AsciiUnicode({ onCommit }: { onCommit: CommitFn }) {
         {text ? (
           <div className="overflow-auto max-h-40 rounded-md border p-2 font-mono text-sm">
             {codes.map((c, i) => (
-              <div key={i}>{c.ch} · dec {c.dec} · hex {c.hex}</div>
+              <div key={i}>
+                {c.ch} · dec {c.dec} · hex {c.hex}
+              </div>
             ))}
           </div>
         ) : null}

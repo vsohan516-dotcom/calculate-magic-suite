@@ -9,7 +9,14 @@ function lcm(a: number, b: number): number {
   return Math.abs(a * b) / gcd(a, b);
 }
 
-export function balanceReaction(reactants: string[], products: string[]): { success: boolean; coefficients?: { reactants: number[]; products: number[] }; error?: string } {
+export function balanceReaction(
+  reactants: string[],
+  products: string[],
+): {
+  success: boolean;
+  coefficients?: { reactants: number[]; products: number[] };
+  error?: string;
+} {
   // Build element list and matrix by parsing simple formulas (reuse a very small parser)
   // For reliability, we'll implement a very small parser that counts element symbols and integers.
   const parse = (formula: string): Record<string, number> => {
@@ -70,12 +77,22 @@ export function balanceReaction(reactants: string[], products: string[]): { succ
       return iter(0, Array(cols).fill(1));
     };
     const sol = tryCoeffs(maxCoeff);
-    if (!sol) return { success: false, error: "Unable to find small integer coefficients (try larger limit)" };
+    if (!sol)
+      return {
+        success: false,
+        error: "Unable to find small integer coefficients (try larger limit)",
+      };
     // normalize coefficients by gcd
     let g = sol[0];
     for (let i = 1; i < sol.length; i++) g = gcd(g, sol[i]);
     const norm = sol.map((v) => v / g);
-    return { success: true, coefficients: { reactants: norm.slice(0, reactants.length), products: norm.slice(reactants.length) } };
+    return {
+      success: true,
+      coefficients: {
+        reactants: norm.slice(0, reactants.length),
+        products: norm.slice(reactants.length),
+      },
+    };
   } catch (e) {
     return { success: false, error: String(e) };
   }
