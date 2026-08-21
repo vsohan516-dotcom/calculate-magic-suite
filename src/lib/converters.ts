@@ -88,15 +88,26 @@ function convertTemperature(value: number, from: string, to: string): number {
   // Normalize to Celsius first.
   let c: number;
   switch (from) {
-    case "C": c = value; break;
-    case "F": c = (value - 32) * (5 / 9); break;
-    case "K": c = value - 273.15; break;
-    default: return NaN;
+    case "C":
+      c = value;
+      break;
+    case "F":
+      c = (value - 32) * (5 / 9);
+      break;
+    case "K":
+      c = value - 273.15;
+      break;
+    default:
+      return NaN;
   }
   switch (to) {
-    case "C": return c;
-    case "F": return c * (9 / 5) + 32;
-    case "K": return c + 273.15;
-    default: return NaN;
+    case "C":
+      return c;
+    case "F":
+      return c * (9 / 5) + 32;
+    case "K":
+      return c + 273.15;
+    default:
+      return NaN;
   }
 }
