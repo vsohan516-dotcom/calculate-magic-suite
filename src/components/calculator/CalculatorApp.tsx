@@ -22,7 +22,7 @@ import {
   SimpleInterestCalc, SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
 } from "@/components/calculator/FinanceTools";
 import { BmrCalc, BodyFatCalc, WaterIntakeCalc } from "@/components/calculator/HealthTools";
-import { CountdownTimer, DateDiffCalc, Stopwatch, TimeCalc } from "@/components/calculator/TimerTools";
+import { CountdownTimer, DateDiffCalc, Stopwatch, TimeCalc } from "@/components/calculator/TimeTools";
 import {
   AsciiConverter, BaseConverter, DataSizeConverter, RomanConverter,
 } from "@/components/calculator/ConverterTools";
