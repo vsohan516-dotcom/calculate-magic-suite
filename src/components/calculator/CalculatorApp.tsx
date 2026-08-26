@@ -1,3 +1,4 @@
+        
 import { useCallback, useState } from "react";
 import {
   Atom, Calculator as CalcIcon, FlaskConical, History, Moon, NotebookPen, ScanLine, Sliders,
@@ -14,17 +15,13 @@ import { UnitConverter } from "@/components/calculator/UnitConverter";
 import { CurrencyConverter } from "@/components/calculator/CurrencyConverter";
 import { GitSyncStatus } from "@/components/calculator/GitSyncStatus";
 import {
-  AgeCalc,
-  BmiCalc,
-  DiscountCalc,
-  EmiCalc,
-  GstCalc,
-  PercentageCalc,
-  TipCalc,
+  AgeCalc, BmiCalc, DiscountCalc, EmiCalc, GstCalc, PercentageCalc, TipCalc,
 } from "@/components/calculator/Tools";
 import {
   AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc, SimpleInterestCalc,
   SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
+  AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc,
+  SimpleInterestCalc, SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
 } from "@/components/calculator/FinanceTools";
 import { BmrCalc, BodyFatCalc, WaterIntakeCalc } from "@/components/calculator/HealthTools";
 import { CountdownTimer, DateDiffCalc, Stopwatch, TimeCalc } from "@/components/calculator/TimeTools";
@@ -95,7 +92,6 @@ export function CalculatorApp() {
                   <GitSyncStatus />
                   <StatsChart entries={history.entries} />
                   <div className="min-h-0 flex-1">
-
                     <HistoryPanel
                       entries={history.entries}
                       onClear={history.clear}
@@ -188,8 +184,8 @@ export function CalculatorApp() {
               <Chemistry onCommit={commitMisc} />
             </TabsContent>
             <TabsContent value="convert" className="animate-pop mt-4 space-y-4">
-              <UnitConverter onCommit={(e, r) => commitMisc(e, r, "Unit")} />
-              <CurrencyConverter onCommit={(e, r) => commitMisc(e, r, "Currency")} />
+              <UnitConverter onCommit={(e: string, r: string) => commitMisc(e, r, "Unit")} />
+              <CurrencyConverter onCommit={(e: string, r: string) => commitMisc(e, r, "Currency")} />
               <BaseConverter onCommit={commitMisc} />
               <RomanConverter onCommit={commitMisc} />
               <AsciiConverter />
@@ -243,8 +239,6 @@ export function CalculatorApp() {
           </Tabs>
         </section>
 
-
-        {/* Sidebar — visible on lg+, in sheet on smaller screens */}
         <aside className="hidden flex-col gap-4 lg:flex lg:sticky lg:top-24 lg:h-[calc(100dvh-7rem)]">
           <GitSyncStatus />
           <StatsChart entries={history.entries} />
