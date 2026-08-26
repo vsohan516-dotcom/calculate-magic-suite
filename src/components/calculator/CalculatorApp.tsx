@@ -22,26 +22,7 @@ import {
   PercentageCalc,
   TipCalc,
 } from "@/components/calculator/Tools";
-import { // From Main-2 (your branch) - KEEP THESE
-import { Chemistry } from "@/components/calculator/Chemistry";
 import {
-  AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, 
-  ProfitLossCalc, SimpleInterestCalc, SiCalc, SplitBillCalc, 
-  TaxCalc, UnitPriceCalc,
-} from "@/components/calculator/FinanceTools";
-import { BmrCalc, BodyFatCalc, WaterIntakeCalc } from "@/components/calculator/HealthTools";
-import { CountdownTimer, DateDiffCalc, Stopwatch, TimeCalc } from "@/components/calculator/TimerTools";
-import { AsciiConverter, BaseConverter, DataSizeConverter, RomanConverter } from "@/components/calculator/ConverterTools";
-import { AiSolver } from "@/components/calculator/AiSolver";
-import { QrGenerator, BarcodeGenerator, ScanTools } from "@/components/calculator/ScanTools";
-import { PasswordGenerator, PasswordStrengthChecker } from "@/components/calculator/SecurityTools";
-import { TextTools } from "@/components/calculator/TextTools";
-import { ConstantsTable, MolarMassCalc, PeriodicTableLookup, PhysicsCalc } from "@/components/calculator/ScienceTools";
-import { NotesVault } from "@/components/calculator/NotesVault";
-
-// From main (incoming) - KEEP THESE TOO
-import { useHistory } from "@/hooks/use-history";
-import { useTheme } from "@/hooks/use-theme";
   AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc, SimpleInterestCalc,
   SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
 } from "@/components/calculator/FinanceTools";
