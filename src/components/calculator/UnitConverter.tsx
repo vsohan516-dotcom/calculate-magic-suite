@@ -58,9 +58,7 @@ export function UnitConverter({ onCommit }: Props) {
           <Button
             variant="ghost"
             size="sm"
-            onClick={() =>
-              onCommit?.(`${value} ${from} → ${to}`, `${result} ${to}`)
-            }
+            onClick={() => onCommit?.(`${value} ${from} → ${to}`, `${result} ${to}`)}
           >
             Save
           </Button>
@@ -91,7 +89,9 @@ export function UnitConverter({ onCommit }: Props) {
             aria-label="Value to convert"
           />
           <Select value={from} onValueChange={setFrom}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {set.units.map((u) => (
                 <SelectItem key={u.id} value={u.id}>
@@ -118,7 +118,9 @@ export function UnitConverter({ onCommit }: Props) {
             {result || "—"}
           </div>
           <Select value={to} onValueChange={setTo}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
             <SelectContent>
               {set.units.map((u) => (
                 <SelectItem key={u.id} value={u.id}>
