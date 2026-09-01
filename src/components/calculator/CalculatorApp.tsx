@@ -20,8 +20,6 @@ import {
 import {
   AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc, SimpleInterestCalc,
   SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
-  AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc,
-  SimpleInterestCalc, SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
 } from "@/components/calculator/FinanceTools";
 import { BmrCalc, BodyFatCalc, WaterIntakeCalc } from "@/components/calculator/HealthTools";
 import { CountdownTimer, DateDiffCalc, Stopwatch, TimeCalc } from "@/components/calculator/TimeTools";
