@@ -219,6 +219,103 @@
   animation: float-slow 6s ease-in-out infinite;
 }
 
+/* --- Cross-browser fallback for older Android System WebView --------------
+   Tailwind v4 relies on oklch(), color-mix() and @property (Chrome 111+ /
+   Safari 16.4+). On devices with an older WebView those declarations are
+   dropped, which leaves the app un-themed (and can hide text/buttons). These
+   solid-colour equivalents guarantee the app still renders as a readable dark
+   theme on such devices; on modern browsers this whole block is ignored. */
+@supports not (color: oklch(0 0 0)) {
+  :root {
+    --background: #f4f4f7;
+    --foreground: #191322;
+    --card: #ffffff;
+    --card-foreground: #191322;
+    --popover: #ffffff;
+    --popover-foreground: #191322;
+    --primary: #7c3aed;
+    --primary-foreground: #ffffff;
+    --secondary: #ece9f3;
+    --secondary-foreground: #241e2d;
+    --muted: #efedf4;
+    --muted-foreground: #6b6478;
+    --accent: #2aa3d8;
+    --accent-foreground: #0c1420;
+    --accent-2: #db4a93;
+    --destructive: #e5484d;
+    --destructive-foreground: #ffffff;
+    --border: #dcd9e4;
+    --input: #d6d2df;
+    --ring: #7c3aed;
+    --glass: rgba(255, 255, 255, 0.6);
+    --glass-border: rgba(0, 0, 0, 0.08);
+    --chart-1: #7c3aed;
+    --chart-2: #2aa3d8;
+    --chart-3: #db4a93;
+    --chart-4: #b58a2a;
+    --chart-5: #e5484d;
+    --grad-bg: none;
+    --grad-primary: linear-gradient(135deg, #7c3aed, #a855f7);
+    --grad-accent: linear-gradient(135deg, #2aa3d8, #5b9df0);
+    --shadow-glass: 0 10px 40px -10px rgba(40, 20, 80, 0.25);
+    --shadow-key: 0 4px 14px -4px rgba(40, 20, 80, 0.22);
+  }
+
+  .dark {
+    --background: #0f1424;
+    --foreground: #e8e7ef;
+    --card: #1a2033;
+    --card-foreground: #e8e7ef;
+    --popover: #1a2033;
+    --popover-foreground: #e8e7ef;
+    --primary: #a78bfa;
+    --primary-foreground: #171221;
+    --secondary: #2a2f45;
+    --secondary-foreground: #e8e7ef;
+    --muted: #252b40;
+    --muted-foreground: #9aa1b8;
+    --accent: #34b3e6;
+    --accent-foreground: #0b1420;
+    --accent-2: #e17ab0;
+    --destructive: #f2555a;
+    --destructive-foreground: #171221;
+    --border: rgba(255, 255, 255, 0.1);
+    --input: rgba(255, 255, 255, 0.14);
+    --ring: #a78bfa;
+    --glass: rgba(30, 36, 55, 0.45);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --chart-1: #a78bfa;
+    --chart-2: #34b3e6;
+    --chart-3: #e17ab0;
+    --chart-4: #b0c93a;
+    --chart-5: #f2555a;
+    --grad-bg: none;
+    --grad-primary: linear-gradient(135deg, #7c3aed, #9333ea);
+    --grad-accent: linear-gradient(135deg, #2aa3d8, #3b82f6);
+    --shadow-glass: 0 20px 60px -10px rgba(0, 0, 0, 0.5);
+    --shadow-key: 0 6px 18px -6px rgba(0, 0, 0, 0.5);
+  }
+
+  body {
+    background-color: var(--background) !important;
+    background-image: none !important;
+    color: var(--foreground) !important;
+  }
+
+  .glass-panel,
+  .glass-key {
+    background: var(--glass);
+    border-color: var(--glass-border);
+  }
+
+  .text-grad {
+    color: var(--primary);
+    -webkit-background-clip: unset;
+    background-clip: unset;
+    background: none;
+  }
+}
+
 @keyframes pop-in {
   from { opacity: 0; transform: scale(0.92); }
   to { opacity: 1; transform: scale(1); }
