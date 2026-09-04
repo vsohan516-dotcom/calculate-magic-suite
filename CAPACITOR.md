@@ -79,6 +79,19 @@ npx cap run android
    without a network. Only live currency rates and the GitHub sync widget need
    internet.
 
+4. **A blank screen now explains itself.** `index.capacitor.html` ships a small
+   ES5 watchdog that paints the real failure on the device instead of leaving a
+   bare `#1a1530` background:
+
+   - a JS throw during startup → **"Startup error"** with the message,
+   - a crash while React renders → **"App crashed while rendering"** with the
+     component stack (error boundary in `src/capacitor-main.tsx`),
+   - the bundle parses but draws nothing within 10 s → **"App did not render"**.
+
+   Each panel also prints the WebView user-agent, so the Chrome/WebView version
+   is readable straight off a screenshot. If you see one of these, the text on
+   the panel _is_ the diagnosis — send it as-is.
+
 ## Notes
 
 - App ID: `app.lovable.lumencalc` (change in `capacitor.config.ts` before the
