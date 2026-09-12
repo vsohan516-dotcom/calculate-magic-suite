@@ -18,8 +18,6 @@ import {
   AgeCalc, BmiCalc, DiscountCalc, EmiCalc, GstCalc, PercentageCalc, TipCalc,
 } from "@/components/calculator/Tools";
 import {
-  AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc, SimpleInterestCalc,
-  SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
   AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc,
   SimpleInterestCalc, SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
 } from "@/components/calculator/FinanceTools";
