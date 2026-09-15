@@ -59,15 +59,33 @@ export function NotesVault() {
   };
 
   return (
-    <ToolCard title="Notes & Secure Vault" description="Stored on this device only · lock private notes">
+    <ToolCard
+      title="Notes & Secure Vault"
+      description="Stored on this device only · lock private notes"
+    >
       <div className="space-y-1.5">
         <Label htmlFor="note-title">Title</Label>
-        <Input id="note-title" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Shopping list" />
+        <Input
+          id="note-title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Shopping list"
+        />
       </div>
-      <Textarea rows={4} value={body} onChange={(e) => setBody(e.target.value)} placeholder="Note text…" />
+      <Textarea
+        rows={4}
+        value={body}
+        onChange={(e) => setBody(e.target.value)}
+        placeholder="Note text…"
+      />
 
       <div className="flex flex-wrap items-center gap-2">
-        <Button variant={locked ? "default" : "outline"} size="sm" className="gap-1.5" onClick={() => setLocked((l) => !l)}>
+        <Button
+          variant={locked ? "default" : "outline"}
+          size="sm"
+          className="gap-1.5"
+          onClick={() => setLocked((l) => !l)}
+        >
           {locked ? <Lock className="size-4" /> : <LockOpen className="size-4" />}
           {locked ? "Locked note" : "Normal note"}
         </Button>
@@ -107,15 +125,16 @@ export function NotesVault() {
                   <span className="truncate">{n.title}</span>
                 </div>
                 <div className="mt-1 whitespace-pre-wrap break-words text-xs text-muted-foreground">
-                  {n.locked
-                    ? unlocked
-                      ? decryptText(n.body, passcode)
-                      : "•••••• locked"
-                    : n.body}
+                  {n.locked ? (unlocked ? decryptText(n.body, passcode) : "•••••• locked") : n.body}
                 </div>
               </div>
               <div className="flex shrink-0 gap-1">
-                <Button size="icon" variant="ghost" aria-label="Pin note" onClick={() => togglePin(n.id)}>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  aria-label="Pin note"
+                  onClick={() => togglePin(n.id)}
+                >
                   <Pin className={`size-4 ${n.pinned ? "text-primary" : ""}`} />
                 </Button>
                 <Button
@@ -131,7 +150,12 @@ export function NotesVault() {
                 >
                   <LockOpen className="size-4" />
                 </Button>
-                <Button size="icon" variant="ghost" aria-label="Delete note" onClick={() => remove(n.id)}>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  aria-label="Delete note"
+                  onClick={() => remove(n.id)}
+                >
                   <Trash2 className="size-4" />
                 </Button>
               </div>

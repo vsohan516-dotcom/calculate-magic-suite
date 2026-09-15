@@ -56,29 +56,26 @@ export function useNotes() {
     return sorted;
   }, []);
 
-  const create = useCallback(
-    (input: { title: string; body: string; locked?: boolean }) => {
-      const now = Date.now();
-      const note: Note = {
-        id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
-        title: input.title.trim() || "Untitled",
-        body: input.body,
-        pinned: false,
-        locked: !!input.locked,
-        createdAt: now,
-        updatedAt: now,
-      };
-      setNotes((prev) => {
-        const next = [note, ...prev].sort(
-          (a, b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt - a.updatedAt,
-        );
-        write(next);
-        return next;
-      });
-      return note;
-    },
-    [],
-  );
+  const create = useCallback((input: { title: string; body: string; locked?: boolean }) => {
+    const now = Date.now();
+    const note: Note = {
+      id: `${now}-${Math.random().toString(36).slice(2, 8)}`,
+      title: input.title.trim() || "Untitled",
+      body: input.body,
+      pinned: false,
+      locked: !!input.locked,
+      createdAt: now,
+      updatedAt: now,
+    };
+    setNotes((prev) => {
+      const next = [note, ...prev].sort(
+        (a, b) => Number(b.pinned) - Number(a.pinned) || b.updatedAt - a.updatedAt,
+      );
+      write(next);
+      return next;
+    });
+    return note;
+  }, []);
 
   const update = useCallback((id: string, patch: Partial<Omit<Note, "id" | "createdAt">>) => {
     setNotes((prev) => {

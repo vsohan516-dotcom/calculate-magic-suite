@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { ToolCard } from "@/components/calculator/ToolCard";
 import { toast } from "sonner";
@@ -57,7 +61,9 @@ export function QrGenerator() {
           <QrCode className="size-4" /> {busy ? "Generating…" : "Generate"}
         </Button>
         {dataUrl ? (
-          <Button variant="outline" onClick={download}>Save image</Button>
+          <Button variant="outline" onClick={download}>
+            Save image
+          </Button>
         ) : null}
       </div>
       {dataUrl ? (
@@ -236,7 +242,9 @@ export function OcrTool() {
       <div className="space-y-1.5">
         <span className="text-sm font-medium">Language</span>
         <Select value={lang} onValueChange={setLang}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="eng">English</SelectItem>
             <SelectItem value="hin">हिंदी</SelectItem>

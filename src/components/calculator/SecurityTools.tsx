@@ -39,7 +39,10 @@ export function PasswordGenerator() {
         <Slider min={6} max={64} step={1} value={[length]} onValueChange={([v]) => setLength(v)} />
       </div>
       {rows.map(([label, value, set]) => (
-        <div key={label} className="flex items-center justify-between rounded-xl bg-muted/20 px-3 py-2">
+        <div
+          key={label}
+          className="flex items-center justify-between rounded-xl bg-muted/20 px-3 py-2"
+        >
           <span className="text-sm">{label}</span>
           <Switch checked={value} onCheckedChange={set} />
         </div>

@@ -36,7 +36,8 @@ export const solveMath = createServerFn({ method: "POST" })
     if (!response.ok) {
       const body = await response.text();
       if (response.status === 429) throw new Error("Rate limit reached — try again in a moment.");
-      if (response.status === 402) throw new Error("AI credits exhausted — add credits to continue.");
+      if (response.status === 402)
+        throw new Error("AI credits exhausted — add credits to continue.");
       throw new Error(`AI request failed [${response.status}]: ${body}`);
     }
 

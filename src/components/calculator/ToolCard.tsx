@@ -60,9 +60,7 @@ export function ToolCard({
     <div className="glass-panel space-y-4 p-5 sm:p-6">
       <div>
         <h2 className="font-display text-lg font-semibold">{title}</h2>
-        {description ? (
-          <p className="mt-0.5 text-xs text-muted-foreground">{description}</p>
-        ) : null}
+        {description ? <p className="mt-0.5 text-xs text-muted-foreground">{description}</p> : null}
       </div>
       <div className="grid gap-3">{children}</div>
       {footer}

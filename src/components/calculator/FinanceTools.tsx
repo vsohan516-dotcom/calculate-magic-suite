@@ -29,7 +29,9 @@ export function SipCalc({ onCommit }: { onCommit: CommitFn }) {
   const [years, setYears] = useState("10");
 
   const res = useMemo(() => {
-    const m = num(monthly), r = num(rate), y = num(years);
+    const m = num(monthly),
+      r = num(rate),
+      y = num(years);
     if ([m, r, y].some(Number.isNaN)) return null;
     const fv = sipFutureValue(m, r, y);
     const invested = m * y * 12;
@@ -49,7 +51,11 @@ export function SipCalc({ onCommit }: { onCommit: CommitFn }) {
           action={
             <SaveButton
               onClick={() =>
-                onCommit(`SIP ${monthly}/mo @ ${rate}% × ${years}y`, fmt(Math.round(res.fv)), "Finance")
+                onCommit(
+                  `SIP ${monthly}/mo @ ${rate}% × ${years}y`,
+                  fmt(Math.round(res.fv)),
+                  "Finance",
+                )
               }
             />
           }
@@ -66,7 +72,9 @@ export function LoanCalc({ onCommit }: { onCommit: CommitFn }) {
   const [years, setYears] = useState("5");
 
   const res = useMemo(() => {
-    const p = num(amount), r = num(rate) / 1200, n = num(years) * 12;
+    const p = num(amount),
+      r = num(rate) / 1200,
+      n = num(years) * 12;
     if ([p, r, n].some(Number.isNaN) || n <= 0) return null;
     const emi = r === 0 ? p / n : (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
     const total = emi * n;
@@ -86,7 +94,11 @@ export function LoanCalc({ onCommit }: { onCommit: CommitFn }) {
           action={
             <SaveButton
               onClick={() =>
-                onCommit(`Loan ${amount} @ ${rate}% × ${years}y`, fmt(Math.round(res.emi)), "Finance")
+                onCommit(
+                  `Loan ${amount} @ ${rate}% × ${years}y`,
+                  fmt(Math.round(res.emi)),
+                  "Finance",
+                )
               }
             />
           }
@@ -103,7 +115,9 @@ export function SimpleInterestCalc({ onCommit }: { onCommit: CommitFn }) {
   const [t, setT] = useState("3");
 
   const res = useMemo(() => {
-    const P = num(p), R = num(r), T = num(t);
+    const P = num(p),
+      R = num(r),
+      T = num(t);
     if ([P, R, T].some(Number.isNaN)) return null;
     return simpleInterest(P, R, T);
   }, [p, r, t]);
@@ -137,7 +151,10 @@ export function CompoundInterestCalc({ onCommit }: { onCommit: CommitFn }) {
   const [n, setN] = useState("4");
 
   const res = useMemo(() => {
-    const P = num(p), R = num(r), T = num(t), N = num(n);
+    const P = num(p),
+      R = num(r),
+      T = num(t),
+      N = num(n);
     if ([P, R, T, N].some(Number.isNaN) || N <= 0) return null;
     return compoundInterest(P, R, T, N);
   }, [p, r, t, n]);
@@ -172,7 +189,8 @@ export function ProfitLossCalc({ onCommit }: { onCommit: CommitFn }) {
   const [sell, setSell] = useState("1500");
 
   const res = useMemo(() => {
-    const c = num(cost), s = num(sell);
+    const c = num(cost),
+      s = num(sell);
     if ([c, s].some(Number.isNaN) || c === 0) return null;
     const diff = s - c;
     return { diff, pct: (diff / c) * 100 };
@@ -224,7 +242,13 @@ export function AverageCalc({ onCommit }: { onCommit: CommitFn }) {
 
   return (
     <ToolCard title="Average Calculator" description="Mean, median, sum, min and max">
-      <Field id="avg-l" label="Numbers (comma or space separated)" type="text" value={list} onChange={setList} />
+      <Field
+        id="avg-l"
+        label="Numbers (comma or space separated)"
+        type="text"
+        value={list}
+        onChange={setList}
+      />
       {res ? (
         <ResultBox
           label="Mean"
@@ -244,7 +268,9 @@ export function SplitBillCalc({ onCommit }: { onCommit: CommitFn }) {
   const [tip, setTip] = useState("10");
 
   const res = useMemo(() => {
-    const t = num(total), p = num(people), tp = num(tip);
+    const t = num(total),
+      p = num(people),
+      tp = num(tip);
     if ([t, p, tp].some(Number.isNaN) || p <= 0) return null;
     const grand = t * (1 + tp / 100);
     return { grand, each: grand / p };
@@ -280,7 +306,9 @@ export function FuelCostCalc({ onCommit }: { onCommit: CommitFn }) {
   const [price, setPrice] = useState("105");
 
   const res = useMemo(() => {
-    const d = num(distance), m = num(mileage), p = num(price);
+    const d = num(distance),
+      m = num(mileage),
+      p = num(price);
     if ([d, m, p].some(Number.isNaN) || m <= 0) return null;
     const litres = d / m;
     return { litres, cost: litres * p, perKm: (litres * p) / (d || 1) };
@@ -298,7 +326,9 @@ export function FuelCostCalc({ onCommit }: { onCommit: CommitFn }) {
           sub={`${fmt(Math.round(res.litres * 100) / 100)} L · ${fmt(Math.round(res.perKm * 100) / 100)} per km`}
           action={
             <SaveButton
-              onClick={() => onCommit(`Fuel ${distance}km @ ${mileage}km/L`, fmt(res.cost), "Finance")}
+              onClick={() =>
+                onCommit(`Fuel ${distance}km @ ${mileage}km/L`, fmt(res.cost), "Finance")
+              }
             />
           }
         />
@@ -315,11 +345,19 @@ export function UnitPriceCalc({ onCommit }: { onCommit: CommitFn }) {
   const [qtyB, setQtyB] = useState("1000");
 
   const res = useMemo(() => {
-    const pa = num(priceA), qa = num(qtyA), pb = num(priceB), qb = num(qtyB);
+    const pa = num(priceA),
+      qa = num(qtyA),
+      pb = num(priceB),
+      qb = num(qtyB);
     if ([pa, qa, pb, qb].some(Number.isNaN) || qa <= 0 || qb <= 0) return null;
     const a = pa / qa;
     const b = pb / qb;
-    return { a, b, better: a <= b ? "A" : "B", savingPct: (Math.abs(a - b) / Math.max(a, b)) * 100 };
+    return {
+      a,
+      b,
+      better: a <= b ? "A" : "B",
+      savingPct: (Math.abs(a - b) / Math.max(a, b)) * 100,
+    };
   }, [priceA, qtyA, priceB, qtyB]);
 
   return (
@@ -335,7 +373,13 @@ export function UnitPriceCalc({ onCommit }: { onCommit: CommitFn }) {
           sub={`A ${fmt(res.a)} · B ${fmt(res.b)} · saves ${fmt(Math.round(res.savingPct * 10) / 10)}%`}
           action={
             <SaveButton
-              onClick={() => onCommit(`Unit price A ${priceA}/${qtyA} vs B ${priceB}/${qtyB}`, `Option ${res.better}`, "Finance")}
+              onClick={() =>
+                onCommit(
+                  `Unit price A ${priceA}/${qtyA} vs B ${priceB}/${qtyB}`,
+                  `Option ${res.better}`,
+                  "Finance",
+                )
+              }
             />
           }
         />
@@ -352,7 +396,10 @@ export function TaxCalc({ onCommit }: { onCommit: CommitFn }) {
   const [cess, setCess] = useState("4");
 
   const res = useMemo(() => {
-    const i = num(income), d = num(deductions), r = num(rate), c = num(cess);
+    const i = num(income),
+      d = num(deductions),
+      r = num(rate),
+      c = num(cess);
     if ([i, d, r, c].some(Number.isNaN)) return null;
     const taxable = Math.max(0, i - d);
     const tax = (taxable * r) / 100;
@@ -373,7 +420,9 @@ export function TaxCalc({ onCommit }: { onCommit: CommitFn }) {
           sub={`Taxable ${fmt(res.taxable)} · Net income ${fmt(Math.round(res.net))}`}
           action={
             <SaveButton
-              onClick={() => onCommit(`Tax ${income} @ ${rate}% + ${cess}% cess`, fmt(res.total), "Finance")}
+              onClick={() =>
+                onCommit(`Tax ${income} @ ${rate}% + ${cess}% cess`, fmt(res.total), "Finance")
+              }
             />
           }
         />

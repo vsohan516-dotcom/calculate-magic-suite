@@ -4,11 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { CommitFn, Field, ResultBox, ToolCard } from "@/components/calculator/ToolCard";
 import {
-  codesToText, convertData, DATA_UNITS, fromRoman, humanBytes, parseInBase, textToCodes, toBase, toRoman,
+  codesToText,
+  convertData,
+  DATA_UNITS,
+  fromRoman,
+  humanBytes,
+  parseInBase,
+  textToCodes,
+  toBase,
+  toRoman,
 } from "@/lib/tools-extra";
 import { toast } from "sonner";
 
@@ -39,18 +51,42 @@ export function BaseConverter({ onCommit }: { onCommit: CommitFn }) {
         <div className="space-y-1.5">
           <Label>From</Label>
           <Select value={from} onValueChange={setFrom}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{BASES.map((b) => <SelectItem key={b.id} value={b.id}>{b.label}</SelectItem>)}</SelectContent>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {BASES.map((b) => (
+                <SelectItem key={b.id} value={b.id}>
+                  {b.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
-        <Button variant="ghost" size="icon" aria-label="Swap bases" onClick={() => { setFrom(to); setTo(from); }}>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Swap bases"
+          onClick={() => {
+            setFrom(to);
+            setTo(from);
+          }}
+        >
           <ArrowRightLeft className="size-4" />
         </Button>
         <div className="space-y-1.5">
           <Label>To</Label>
           <Select value={to} onValueChange={setTo}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{BASES.map((b) => <SelectItem key={b.id} value={b.id}>{b.label}</SelectItem>)}</SelectContent>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {BASES.map((b) => (
+                <SelectItem key={b.id} value={b.id}>
+                  {b.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
       </div>
@@ -60,7 +96,14 @@ export function BaseConverter({ onCommit }: { onCommit: CommitFn }) {
           value={res.out.toUpperCase()}
           sub={`Decimal ${res.decimal}`}
           action={
-            <Button size="sm" variant="ghost" onClick={() => { onCommit(`${value}₍${from}₎ → base ${to}`, res.out.toUpperCase(), "Convert"); toast.success("Saved to history"); }}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                onCommit(`${value}₍${from}₎ → base ${to}`, res.out.toUpperCase(), "Convert");
+                toast.success("Saved to history");
+              }}
+            >
               Save to history
             </Button>
           }
@@ -102,7 +145,15 @@ export function RomanConverter({ onCommit }: { onCommit: CommitFn }) {
           }}
         />
       </div>
-      <Button size="sm" variant="ghost" className="justify-self-start" onClick={() => { onCommit(`${numeric} ⇄ Roman`, roman, "Convert"); toast.success("Saved to history"); }}>
+      <Button
+        size="sm"
+        variant="ghost"
+        className="justify-self-start"
+        onClick={() => {
+          onCommit(`${numeric} ⇄ Roman`, roman, "Convert");
+          toast.success("Saved to history");
+        }}
+      >
         Save to history
       </Button>
     </ToolCard>
@@ -121,7 +172,9 @@ export function AsciiConverter() {
       <div className="space-y-1.5">
         <Label>Code format</Label>
         <Select value={radix} onValueChange={setRadix}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="10">Decimal</SelectItem>
             <SelectItem value="16">Hexadecimal</SelectItem>
@@ -130,9 +183,19 @@ export function AsciiConverter() {
         </Select>
       </div>
       <Field id="ac-t" label="Text → codes" type="text" value={text} onChange={setText} />
-      <div className="break-words rounded-2xl bg-muted/30 p-3 font-mono text-sm">{codes || "—"}</div>
-      <Field id="ac-c" label="Codes → text" type="text" value={decodeInput} onChange={setDecodeInput} />
-      <div className="break-words rounded-2xl bg-muted/30 p-3 font-mono text-sm">{decoded || "—"}</div>
+      <div className="break-words rounded-2xl bg-muted/30 p-3 font-mono text-sm">
+        {codes || "—"}
+      </div>
+      <Field
+        id="ac-c"
+        label="Codes → text"
+        type="text"
+        value={decodeInput}
+        onChange={setDecodeInput}
+      />
+      <div className="break-words rounded-2xl bg-muted/30 p-3 font-mono text-sm">
+        {decoded || "—"}
+      </div>
     </ToolCard>
   );
 }
@@ -157,18 +220,42 @@ export function DataSizeConverter({ onCommit }: { onCommit: CommitFn }) {
         <div className="space-y-1.5">
           <Label>From</Label>
           <Select value={from} onValueChange={setFrom}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{DATA_UNITS.map((u) => <SelectItem key={u.id} value={u.id}>{u.label}</SelectItem>)}</SelectContent>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {DATA_UNITS.map((u) => (
+                <SelectItem key={u.id} value={u.id}>
+                  {u.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
-        <Button variant="ghost" size="icon" aria-label="Swap units" onClick={() => { setFrom(to); setTo(from); }}>
+        <Button
+          variant="ghost"
+          size="icon"
+          aria-label="Swap units"
+          onClick={() => {
+            setFrom(to);
+            setTo(from);
+          }}
+        >
           <ArrowRightLeft className="size-4" />
         </Button>
         <div className="space-y-1.5">
           <Label>To</Label>
           <Select value={to} onValueChange={setTo}>
-            <SelectTrigger><SelectValue /></SelectTrigger>
-            <SelectContent>{DATA_UNITS.map((u) => <SelectItem key={u.id} value={u.id}>{u.label}</SelectItem>)}</SelectContent>
+            <SelectTrigger>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {DATA_UNITS.map((u) => (
+                <SelectItem key={u.id} value={u.id}>
+                  {u.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
           </Select>
         </div>
       </div>
@@ -178,7 +265,18 @@ export function DataSizeConverter({ onCommit }: { onCommit: CommitFn }) {
           value={String(Number(res.out.toPrecision(10)))}
           sub={`Human readable: ${res.human}`}
           action={
-            <Button size="sm" variant="ghost" onClick={() => { onCommit(`${value} ${from} → ${to}`, String(Number(res.out.toPrecision(10))), "Convert"); toast.success("Saved to history"); }}>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                onCommit(
+                  `${value} ${from} → ${to}`,
+                  String(Number(res.out.toPrecision(10))),
+                  "Convert",
+                );
+                toast.success("Saved to history");
+              }}
+            >
               Save to history
             </Button>
           }
