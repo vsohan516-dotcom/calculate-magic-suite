@@ -43,7 +43,9 @@ export function TextTools() {
           ] as Array<[string, string | number]>
         ).map(([label, value]) => (
           <div key={label} className="rounded-xl bg-muted/30 p-3">
-            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">{label}</div>
+            <div className="text-[10px] uppercase tracking-widest text-muted-foreground">
+              {label}
+            </div>
             <div className="font-display text-lg font-semibold tabular-nums">{value}</div>
           </div>
         ))}

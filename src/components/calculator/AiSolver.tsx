@@ -4,7 +4,11 @@ import { Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { CommitFn, ToolCard } from "@/components/calculator/ToolCard";
 import { solveMath } from "@/lib/ai.functions";
@@ -44,7 +48,9 @@ export function AiSolver({ onCommit }: { onCommit: CommitFn }) {
       />
       <div className="flex flex-wrap items-center gap-2">
         <Select value={language} onValueChange={(v) => setLanguage(v as "en" | "hi")}>
-          <SelectTrigger className="w-36"><SelectValue /></SelectTrigger>
+          <SelectTrigger className="w-36">
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             <SelectItem value="en">English</SelectItem>
             <SelectItem value="hi">हिंदी</SelectItem>

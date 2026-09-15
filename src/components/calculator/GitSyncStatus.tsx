@@ -106,16 +106,12 @@ export function GitSyncStatus() {
           <>
             <div className="flex items-center justify-between gap-2">
               <span className="text-muted-foreground">Last push</span>
-              <span className="font-medium">
-                {state.pushedAt ? relative(state.pushedAt) : "—"}
-              </span>
+              <span className="font-medium">{state.pushedAt ? relative(state.pushedAt) : "—"}</span>
             </div>
             {state.pushedAt && (
               <div className="flex items-center justify-between gap-2">
                 <span className="text-muted-foreground">Timestamp</span>
-                <span className="font-mono">
-                  {new Date(state.pushedAt).toLocaleString()}
-                </span>
+                <span className="font-mono">{new Date(state.pushedAt).toLocaleString()}</span>
               </div>
             )}
             <div className="flex items-center justify-between gap-2">

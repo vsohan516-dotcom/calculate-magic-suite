@@ -4,7 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from "@/components/ui/select";
 import { CommitFn, Field, num, ResultBox, ToolCard } from "@/components/calculator/ToolCard";
 import { CONSTANTS, ELEMENTS, molarMass, PHYSICS_FORMULAS } from "@/lib/tools-extra";
@@ -91,10 +95,14 @@ export function PhysicsCalc({ onCommit }: { onCommit: CommitFn }) {
       <div className="space-y-1.5">
         <span className="text-sm font-medium">Formula</span>
         <Select value={id} onValueChange={pick}>
-          <SelectTrigger><SelectValue /></SelectTrigger>
+          <SelectTrigger>
+            <SelectValue />
+          </SelectTrigger>
           <SelectContent>
             {PHYSICS_FORMULAS.map((f) => (
-              <SelectItem key={f.id} value={f.id}>{f.name}</SelectItem>
+              <SelectItem key={f.id} value={f.id}>
+                {f.name}
+              </SelectItem>
             ))}
           </SelectContent>
         </Select>
@@ -159,13 +167,19 @@ export function MolarMassCalc({ onCommit }: { onCommit: CommitFn }) {
         <ResultBox
           label="Molar mass"
           value={`${Number(res.data.mass.toFixed(4))} g/mol`}
-          sub={res.data.parts.map((p) => `${p.symbol}${p.count > 1 ? p.count : ""} ${p.mass.toFixed(3)}`).join(" · ")}
+          sub={res.data.parts
+            .map((p) => `${p.symbol}${p.count > 1 ? p.count : ""} ${p.mass.toFixed(3)}`)
+            .join(" · ")}
           action={
             <Button
               size="sm"
               variant="ghost"
               onClick={() => {
-                onCommit(`Molar mass ${formula}`, `${Number(res.data!.mass.toFixed(4))} g/mol`, "Chemistry");
+                onCommit(
+                  `Molar mass ${formula}`,
+                  `${Number(res.data!.mass.toFixed(4))} g/mol`,
+                  "Chemistry",
+                );
                 toast.success("Saved to history");
               }}
             >
@@ -186,10 +200,7 @@ export function PeriodicTableLookup() {
     const s = q.trim().toLowerCase();
     if (!s) return ELEMENTS.slice(0, 20);
     return ELEMENTS.filter(
-      (e) =>
-        e.name.toLowerCase().includes(s) ||
-        e.symbol.toLowerCase() === s ||
-        String(e.z) === s,
+      (e) => e.name.toLowerCase().includes(s) || e.symbol.toLowerCase() === s || String(e.z) === s,
     );
   }, [q]);
 
@@ -197,11 +208,19 @@ export function PeriodicTableLookup() {
     <ToolCard title="Periodic Table" description="Search by name, symbol or atomic number">
       <div className="relative">
         <Atom className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-        <Input className="pl-9" value={q} onChange={(e) => setQ(e.target.value)} placeholder="e.g. Na" />
+        <Input
+          className="pl-9"
+          value={q}
+          onChange={(e) => setQ(e.target.value)}
+          placeholder="e.g. Na"
+        />
       </div>
       <ul className="max-h-72 space-y-1 overflow-auto">
         {rows.map((e) => (
-          <li key={e.z} className="flex items-center justify-between rounded-xl bg-muted/25 px-3 py-2">
+          <li
+            key={e.z}
+            className="flex items-center justify-between rounded-xl bg-muted/25 px-3 py-2"
+          >
             <span className="min-w-0">
               <span className="block truncate text-sm">
                 {e.z}. {e.name} ({e.symbol})

@@ -21,9 +21,19 @@ export function toBase(n: number, base: number): string {
 /* ───────────── Roman numerals ───────────── */
 
 const ROMAN: Array<[number, string]> = [
-  [1000, "M"], [900, "CM"], [500, "D"], [400, "CD"],
-  [100, "C"], [90, "XC"], [50, "L"], [40, "XL"],
-  [10, "X"], [9, "IX"], [5, "V"], [4, "IV"], [1, "I"],
+  [1000, "M"],
+  [900, "CM"],
+  [500, "D"],
+  [400, "CD"],
+  [100, "C"],
+  [90, "XC"],
+  [50, "L"],
+  [40, "XL"],
+  [10, "X"],
+  [9, "IX"],
+  [5, "V"],
+  [4, "IV"],
+  [1, "I"],
 ];
 
 export function toRoman(n: number): string {
@@ -469,7 +479,10 @@ export const ELEMENTS: Element[] = [
 const BY_SYMBOL = new Map(ELEMENTS.map((e) => [e.symbol, e]));
 
 /** Parse a chemical formula like "Ca(OH)2" and return its molar mass in g/mol. */
-export function molarMass(formula: string): { mass: number; parts: Array<{ symbol: string; count: number; mass: number }> } {
+export function molarMass(formula: string): {
+  mass: number;
+  parts: Array<{ symbol: string; count: number; mass: number }>;
+} {
   const tokens = formula.replace(/\s+/g, "");
   let i = 0;
 
@@ -544,11 +557,14 @@ export function bodyFatNavy(
   hipCm?: number,
 ): number {
   if (sex === "male") {
-    return 495 / (1.0324 - 0.19077 * Math.log10(waistCm - neckCm) + 0.15456 * Math.log10(heightCm)) - 450;
+    return (
+      495 / (1.0324 - 0.19077 * Math.log10(waistCm - neckCm) + 0.15456 * Math.log10(heightCm)) - 450
+    );
   }
   const hip = hipCm ?? 0;
   return (
-    495 / (1.29579 - 0.35004 * Math.log10(waistCm + hip - neckCm) + 0.221 * Math.log10(heightCm)) - 450
+    495 / (1.29579 - 0.35004 * Math.log10(waistCm + hip - neckCm) + 0.221 * Math.log10(heightCm)) -
+    450
   );
 }
 
@@ -593,17 +609,29 @@ export function convertCase(text: string, mode: CaseMode): string {
     case "title":
       return text.replace(/\S+/g, (w) => w[0].toUpperCase() + w.slice(1).toLowerCase());
     case "sentence":
-      return text
-        .toLowerCase()
-        .replace(/(^\s*\w|[.!?]\s*\w)/g, (m) => m.toUpperCase());
+      return text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g, (m) => m.toUpperCase());
     case "camel": {
-      const parts = text.trim().toLowerCase().split(/[\s_-]+/).filter(Boolean);
+      const parts = text
+        .trim()
+        .toLowerCase()
+        .split(/[\s_-]+/)
+        .filter(Boolean);
       return parts.map((p, i) => (i === 0 ? p : p[0].toUpperCase() + p.slice(1))).join("");
     }
     case "snake":
-      return text.trim().toLowerCase().split(/[\s_-]+/).filter(Boolean).join("_");
+      return text
+        .trim()
+        .toLowerCase()
+        .split(/[\s_-]+/)
+        .filter(Boolean)
+        .join("_");
     case "kebab":
-      return text.trim().toLowerCase().split(/[\s_-]+/).filter(Boolean).join("-");
+      return text
+        .trim()
+        .toLowerCase()
+        .split(/[\s_-]+/)
+        .filter(Boolean)
+        .join("-");
     default:
       return text;
   }

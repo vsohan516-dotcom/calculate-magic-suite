@@ -19,8 +19,12 @@ function fromSeconds(total: number) {
 }
 
 export function TimeCalc({ onCommit }: { onCommit: CommitFn }) {
-  const [h1, setH1] = useState("2"); const [m1, setM1] = useState("45"); const [s1, setS1] = useState("0");
-  const [h2, setH2] = useState("1"); const [m2, setM2] = useState("30"); const [s2, setS2] = useState("0");
+  const [h1, setH1] = useState("2");
+  const [m1, setM1] = useState("45");
+  const [s1, setS1] = useState("0");
+  const [h2, setH2] = useState("1");
+  const [m2, setM2] = useState("30");
+  const [s2, setS2] = useState("0");
   const [op, setOp] = useState<"add" | "sub">("add");
 
   const res = useMemo(() => {
@@ -39,8 +43,20 @@ export function TimeCalc({ onCommit }: { onCommit: CommitFn }) {
         <Field id="t-s1" label="Seconds" value={s1} onChange={setS1} />
       </div>
       <div className="flex gap-2">
-        <Button size="sm" variant={op === "add" ? "default" : "outline"} onClick={() => setOp("add")}>Add</Button>
-        <Button size="sm" variant={op === "sub" ? "default" : "outline"} onClick={() => setOp("sub")}>Subtract</Button>
+        <Button
+          size="sm"
+          variant={op === "add" ? "default" : "outline"}
+          onClick={() => setOp("add")}
+        >
+          Add
+        </Button>
+        <Button
+          size="sm"
+          variant={op === "sub" ? "default" : "outline"}
+          onClick={() => setOp("sub")}
+        >
+          Subtract
+        </Button>
       </div>
       <div className="grid grid-cols-3 gap-2">
         <Field id="t-h2" label="Hours" value={h2} onChange={setH2} />
@@ -53,10 +69,20 @@ export function TimeCalc({ onCommit }: { onCommit: CommitFn }) {
           value={fromSeconds(res)}
           sub={`${Math.round(res)} seconds total`}
           action={
-            <Button size="sm" variant="ghost" onClick={() => {
-              onCommit(`${h1}:${m1}:${s1} ${op === "add" ? "+" : "−"} ${h2}:${m2}:${s2}`, fromSeconds(res), "Time");
-              toast.success("Saved to history");
-            }}>Save to history</Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                onCommit(
+                  `${h1}:${m1}:${s1} ${op === "add" ? "+" : "−"} ${h2}:${m2}:${s2}`,
+                  fromSeconds(res),
+                  "Time",
+                );
+                toast.success("Saved to history");
+              }}
+            >
+              Save to history
+            </Button>
           }
         />
       ) : null}
@@ -95,10 +121,16 @@ export function DateDiffCalc({ onCommit }: { onCommit: CommitFn }) {
           value={`${res.days} days`}
           sub={`${res.weeks} weeks · ${res.months.toFixed(1)} months · ${res.years.toFixed(2)} years · ${res.hours} hours`}
           action={
-            <Button size="sm" variant="ghost" onClick={() => {
-              onCommit(`${from} → ${to}`, `${res.days} days`, "Time");
-              toast.success("Saved to history");
-            }}>Save to history</Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={() => {
+                onCommit(`${from} → ${to}`, `${res.days} days`, "Time");
+                toast.success("Saved to history");
+              }}
+            >
+              Save to history
+            </Button>
           }
         />
       ) : null}
@@ -131,16 +163,30 @@ export function Stopwatch() {
 
   return (
     <ToolCard title="Stopwatch" description="Precise timing with laps">
-      <div className="text-center font-display text-4xl font-semibold tabular-nums text-grad">{display}</div>
+      <div className="text-center font-display text-4xl font-semibold tabular-nums text-grad">
+        {display}
+      </div>
       <div className="flex flex-wrap gap-2">
         <Button onClick={() => setRunning((r) => !r)} className="gap-1.5">
           {running ? <Pause className="size-4" /> : <Play className="size-4" />}
           {running ? "Pause" : "Start"}
         </Button>
-        <Button variant="outline" onClick={() => setLaps((l) => [elapsed, ...l])} disabled={!running}>
+        <Button
+          variant="outline"
+          onClick={() => setLaps((l) => [elapsed, ...l])}
+          disabled={!running}
+        >
           Lap
         </Button>
-        <Button variant="ghost" className="gap-1.5" onClick={() => { setRunning(false); setElapsed(0); setLaps([]); }}>
+        <Button
+          variant="ghost"
+          className="gap-1.5"
+          onClick={() => {
+            setRunning(false);
+            setElapsed(0);
+            setLaps([]);
+          }}
+        >
           <RotateCcw className="size-4" /> Reset
         </Button>
       </div>
@@ -195,7 +241,9 @@ export function CountdownTimer() {
   return (
     <ToolCard title="Countdown Timer" description="Alerts you when the time is up">
       <Field id="cd-m" label="Duration" value={minutes} onChange={setMinutes} suffix="minutes" />
-      <div className="text-center font-display text-4xl font-semibold tabular-nums text-grad">{display}</div>
+      <div className="text-center font-display text-4xl font-semibold tabular-nums text-grad">
+        {display}
+      </div>
       <div className="flex flex-wrap gap-2">
         <Button
           className="gap-1.5"
@@ -210,7 +258,15 @@ export function CountdownTimer() {
         >
           <Timer className="size-4" /> {running ? "Pause" : "Start"}
         </Button>
-        <Button variant="ghost" onClick={() => { setRunning(false); setRemaining(0); }}>Reset</Button>
+        <Button
+          variant="ghost"
+          onClick={() => {
+            setRunning(false);
+            setRemaining(0);
+          }}
+        >
+          Reset
+        </Button>
       </div>
     </ToolCard>
   );
