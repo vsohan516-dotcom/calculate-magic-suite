@@ -1,3 +1,4 @@
+import { useCallback, useState } from "react";
 
 cat > src/components/calculator/CalculatorApp.tsx <<'EOF'
 import { lazy, Suspense, useCallback, useState } from "react";
@@ -48,6 +49,8 @@ import {
 } from "@/components/calculator/Tools";
 
 import {
+  AverageCalc, CompoundInterestCalc, FuelCostCalc, LoanCalc, ProfitLossCalc,
+  SimpleInterestCalc, SipCalc, SplitBillCalc, TaxCalc, UnitPriceCalc,
   AverageCalc,
   CompoundInterestCalc,
   FuelCostCalc,
