@@ -256,7 +256,25 @@ export function CalculatorApp() {
               <CountdownTimer />
             </TabsContent>
             <TabsContent value="ai" className="animate-pop mt-4 space-y-4">
-              <AiSolver onCommit={commitMisc} />
+              {isNative ? (
+                <div className="glass-panel rounded-2xl p-6 text-center">
+                  <Sparkles className="mx-auto mb-3 size-8" />
+                  <h3 className="font-semibold">AI Solver</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">
+                    AI Solver requires the online web version.
+                  </p>
+                </div>
+              ) : (
+                <Suspense
+                  fallback={
+                    <div className="glass-panel rounded-2xl p-6 text-center text-sm text-muted-foreground">
+                      Loading AI Solver…
+                    </div>
+                  }
+                >
+                  <AiSolver onCommit={commitMisc} />
+                </Suspense>
+              )}
             </TabsContent>
             <TabsContent value="scan" className="animate-pop mt-4 space-y-4">
               <QrGenerator />
