@@ -14,17 +14,36 @@ function hash(text: string): string {
   return `${(h1 >>> 0).toString(36)}.${(h2 >>> 0).toString(36)}.${text.length}`;
 }
 
+function readPass(): string | null {
+  // localStorage throws when storage is blocked in the WebView — never let a
+  // vault lookup take the whole app down with it.
+  try {
+    return window.localStorage.getItem(PASS_KEY);
+  } catch {
+    return null;
+  }
+}
+
+function writePass(value: string): void {
+  try {
+    window.localStorage.setItem(PASS_KEY, value);
+  } catch {
+    /* ignore quota / blocked-storage errors */
+  }
+}
+
 export function hasPasscode(): boolean {
   if (typeof window === "undefined") return false;
-  return !!window.localStorage.getItem(PASS_KEY);
+  return !!readPass();
 }
 
 export function setPasscode(passcode: string): void {
-  window.localStorage.setItem(PASS_KEY, hash(passcode));
+  writePass(hash(passcode));
 }
 
 export function verifyPasscode(passcode: string): boolean {
-  return window.localStorage.getItem(PASS_KEY) === hash(passcode);
+  const stored = readPass();
+  return stored !== null && stored === hash(passcode);
 }
 
 function xor(text: string, key: string): string {

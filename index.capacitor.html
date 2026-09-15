@@ -13,7 +13,105 @@
         margin: 0;
         background: #1a1530;
       }
+      /* Diagnostic panel — only ever shown by the watchdog script below.
+         Inline styles so it renders even when the stylesheet failed to load. */
+      #lumen-boot-error {
+        display: none;
+        box-sizing: border-box;
+        padding: 20px;
+        min-height: 100vh;
+        background: #1a1530;
+        color: #f2eefc;
+        font: 14px/1.55 monospace;
+        word-break: break-word;
+      }
+      #lumen-boot-error h1 {
+        margin: 0 0 10px;
+        font-size: 17px;
+        color: #ffd166;
+      }
+      #lumen-boot-error pre {
+        white-space: pre-wrap;
+        background: #2a2244;
+        padding: 12px;
+        border-radius: 8px;
+        overflow-x: auto;
+      }
+      #lumen-boot-error button {
+        margin-top: 14px;
+        padding: 10px 16px;
+        border: 0;
+        border-radius: 8px;
+        background: #7c3aed;
+        color: #fff;
+        font: inherit;
+      }
     </style>
+    <!-- Written as plain ES5 on purpose: this file is copied verbatim into the
+         APK, so it is never transpiled. It must also parse on a WebView too old
+         to run the bundle — that is exactly the case it has to report. -->
+    <script>
+      (function () {
+        var shown = false;
+        function panel() {
+          var el = document.getElementById("lumen-boot-error");
+          if (!el) {
+            el = document.createElement("div");
+            el.id = "lumen-boot-error";
+            (document.body || document.documentElement).appendChild(el);
+          }
+          return el;
+        }
+        function show(title, detail) {
+          var el = panel();
+          var ua = (navigator && navigator.userAgent) || "unknown";
+          el.innerHTML =
+            "<h1>" +
+            title +
+            "</h1><pre>" +
+            String(detail).replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+            "</pre><pre>WebView: " +
+            ua.replace(/&/g, "&amp;").replace(/</g, "&lt;") +
+            "</pre>";
+          var btn = document.createElement("button");
+          btn.textContent = "Reload";
+          btn.onclick = function () {
+            location.reload();
+          };
+          el.appendChild(btn);
+          el.style.display = "block";
+          shown = true;
+        }
+        window.__lumenBootError = show;
+
+        // A throw during module evaluation lands here; without this the WebView
+        // just keeps showing the plain #1a1530 background ("blank screen").
+        window.addEventListener("error", function (e) {
+          show(
+            "Startup error",
+            (e && (e.message || e.error)) +
+              "\n" +
+              ((e && (e.filename || "")) + ":" + (e && e.lineno || "")),
+          );
+        });
+        window.addEventListener("unhandledrejection", function (e) {
+          show("Unhandled promise rejection", (e && e.reason) || "unknown");
+        });
+
+        // The bundle parses but nothing renders (or the script never ran at all).
+        setTimeout(function () {
+          if (shown) return;
+          var root = document.getElementById("root");
+          if (root && root.childNodes.length === 0) {
+            show(
+              "App did not render",
+              "The JavaScript bundle did not draw anything within 10 seconds.\n" +
+                "Usually a WebView that is too old for the bundle, or a blocked asset.",
+            );
+          }
+        }, 10000);
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
