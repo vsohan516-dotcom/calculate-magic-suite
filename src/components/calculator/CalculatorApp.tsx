@@ -71,9 +71,22 @@ import { Chemistry } from "@/components/calculator/Chemistry";
 import { useHistory } from "@/hooks/use-history";
 import { useTheme } from "@/hooks/use-theme";
 
+/*
+ * AiSolver imports @tanstack/react-start, which can rely on server-side
+ * AsyncLocalStorage that is unavailable inside the Android WebView.
+ * It must therefore never be imported at application startup — it is loaded
+ * only when the AI tab is opened on the web version.
+ */
+const AiSolver = lazy(() =>
+  import("@/components/calculator/AiSolver").then((module) => ({
+    default: module.AiSolver,
+  })),
+);
+
 export function CalculatorApp() {
   const history = useHistory();
   const { theme, toggle } = useTheme();
+  const isNative = Capacitor.isNativePlatform();
   const [mode, setMode] = useState<
     | "standard"
     | "scientific"
