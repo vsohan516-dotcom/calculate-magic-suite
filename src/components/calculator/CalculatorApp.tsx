@@ -56,7 +56,6 @@ import {
   DataSizeConverter,
   RomanConverter,
 } from "@/components/calculator/ConverterTools";
-import { AiSolver } from "@/components/calculator/AiSolver";
 import { OcrTool, QrGenerator, QrScanner } from "@/components/calculator/ScanTools";
 import { PasswordGenerator, PasswordStrengthChecker } from "@/components/calculator/SecurityTools";
 import { TextTools } from "@/components/calculator/TextTools";
