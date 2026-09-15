@@ -1,4 +1,5 @@
-import { useCallback, useState } from "react";
+import { lazy, Suspense, useCallback, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 import {
   Atom,
   Calculator as CalcIcon,
